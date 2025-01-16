@@ -1,7 +1,9 @@
 package com.sp.milestrack;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -11,7 +13,8 @@ public class splashScreen extends Activity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.splashscreen);
-
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.splashscreen_sound);
+        mp.start();
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
@@ -19,6 +22,7 @@ public class splashScreen extends Activity {
                 Intent mainIntent = new Intent(splashScreen.this, MainActivity.class);
                 splashScreen.this.startActivity(mainIntent);
                 splashScreen.this.finish();
+                mp.release();
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
