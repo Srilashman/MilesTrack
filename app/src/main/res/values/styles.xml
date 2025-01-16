@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="mainAppTheme" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        <!-- Define your main theme properties here -->
+    </style>
+    <style name="splashScreenTheme" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/miles_track_splash_screen</item>
+    </style>
+</resources>
