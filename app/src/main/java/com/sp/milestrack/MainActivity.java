@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-
+    public MenuItem prev_nav_ic;
+    public BottomNavigationView bottomNavigationView;
+    NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +51,14 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        prev_nav_ic = bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            changeSelectedNavIc(); // Update the selected navigation item
+        });
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -63,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.nav_slideshow);
                 }
                 else return false;
+                prev_nav_ic = bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
                 return true; // if in one of the if/if-else clauses
             }
         });
@@ -80,6 +88,22 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+    public void changeSelectedNavIc() {
+        int currentDestinationId = navController.getCurrentDestination().getId();
+        prev_nav_ic.setChecked(false);
+        MenuItem setNavIc;
+        if (currentDestinationId == R.id.nav_home) {
+            setNavIc = bottomNavigationView.getMenu().findItem(R.id.home);
+            setNavIc.setChecked(true);
+        } else if (R.id.nav_gallery == currentDestinationId) {
+            setNavIc = bottomNavigationView.getMenu().findItem(R.id.record);
+            setNavIc.setChecked(true);
+        } else if (R.id.nav_slideshow == currentDestinationId) {
+            setNavIc = bottomNavigationView.getMenu().findItem(R.id.list);
+            setNavIc.setChecked(true);
+        }
+        prev_nav_ic = bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
     }
 }
 //superman
