@@ -16,11 +16,7 @@ public class splashScreen extends Activity {
         super.onCreate(icicle);
         setContentView(R.layout.splashscreen);
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.splashscreen_sound);
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
-                0);
-        mp.setVolume(0.5f, 0.5f); // 0.0f mute, 1.0f max
+        mp.setVolume(1.0f, 1.0f); // 0.0f mute, 1.0f max
         mp.start();
         new Handler().postDelayed(new Runnable(){
             @Override
