@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-    public MenuItem prev_nav_ic;
     public BottomNavigationView bottomNavigationView;
     NavController navController;
     @Override
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        prev_nav_ic = bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             changeSelectedNavIc(); // Update the selected navigation item
         });
@@ -70,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.nav_slideshow);
                 }
                 else return false;
-                prev_nav_ic = bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
                 return true; // if in one of the if/if-else clauses
             }
         });
@@ -91,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void changeSelectedNavIc() {
         int currentDestinationId = navController.getCurrentDestination().getId();
-        prev_nav_ic.setChecked(false);
         MenuItem setNavIc;
         if (currentDestinationId == R.id.nav_home) {
             setNavIc = bottomNavigationView.getMenu().findItem(R.id.home);
@@ -103,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
             setNavIc = bottomNavigationView.getMenu().findItem(R.id.list);
             setNavIc.setChecked(true);
         }
-        prev_nav_ic = bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
     }
 }
 //superman
