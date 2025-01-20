@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.sp.milestrack.databinding.FragmentGalleryBinding;
+
 import com.sp.milestrack.databinding.FragmentRecordBinding;
 
 public class RecordFragment extends Fragment {

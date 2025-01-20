@@ -3,11 +3,13 @@ package com.sp.milestrack;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             changeSelectedNavIc(); // Update the selected navigation item
         });
+        findViewById(R.id.nav_view).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_home);
+        });
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -64,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.nav_list);
                 }
                 else return false;
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
                 return true; // if in one of the if/if-else clauses
             }
         });

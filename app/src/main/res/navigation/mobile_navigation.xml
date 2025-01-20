@@ -9,17 +9,20 @@
         android:id="@+id/nav_home"
         android:name="com.sp.milestrack.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home"
+        app:popUpToSaveState="true"/>
 
     <fragment
         android:id="@+id/nav_record"
         android:name="com.sp.milestrack.ui.record.RecordFragment"
         android:label="@string/menu_record"
-        tools:layout="@layout/fragment_record" />
+        tools:layout="@layout/fragment_record"
+        app:popUpToSaveState="true"/>
 
     <fragment
         android:id="@+id/nav_list"
         android:name="com.sp.milestrack.ui.list.ListFragment"
         android:label="@string/menu_list"
-        tools:layout="@layout/fragment_list" />
+        tools:layout="@layout/fragment_list"
+        app:popUpToSaveState="true"/>
 </navigation>
