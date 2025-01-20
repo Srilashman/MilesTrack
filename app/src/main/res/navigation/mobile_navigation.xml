@@ -15,11 +15,11 @@
         android:id="@+id/nav_record"
         android:name="com.sp.milestrack.ui.record.RecordFragment"
         android:label="@string/menu_record"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_record" />
 
     <fragment
         android:id="@+id/nav_list"
         android:name="com.sp.milestrack.ui.list.ListFragment"
         android:label="@string/menu_list"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_list" />
 </navigation>
