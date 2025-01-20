@@ -11,17 +11,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.sp.milestrack.databinding.FragmentGalleryBinding;
+import com.sp.milestrack.databinding.FragmentRecordBinding;
 
 public class RecordFragment extends Fragment {
 
-    private FragmentGalleryBinding binding;
+    private FragmentRecordBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         RecordViewModel recordViewModel =
                 new ViewModelProvider(this).get(RecordViewModel.class);
 
-        binding = FragmentGalleryBinding.inflate(inflater, container, false);
+        binding = FragmentRecordBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textGallery;

@@ -10,18 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.sp.milestrack.databinding.FragmentSlideshowBinding;
+import com.sp.milestrack.databinding.FragmentListBinding;
 
 public class ListFragment extends Fragment {
 
-    private FragmentSlideshowBinding binding;
+    private FragmentListBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ListViewModel listViewModel =
                 new ViewModelProvider(this).get(ListViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textSlideshow;
