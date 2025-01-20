@@ -1,4 +1,4 @@
-package com.sp.milestrack.ui.slideshow;
+package com.sp.milestrack.ui.list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,20 +12,20 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.sp.milestrack.databinding.FragmentSlideshowBinding;
 
-public class SlideshowFragment extends Fragment {
+public class ListFragment extends Fragment {
 
     private FragmentSlideshowBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SlideshowViewModel slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        ListViewModel listViewModel =
+                new ViewModelProvider(this).get(ListViewModel.class);
 
         binding = FragmentSlideshowBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textSlideshow;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        listViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

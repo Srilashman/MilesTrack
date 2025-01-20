@@ -1,4 +1,4 @@
-package com.sp.milestrack.ui.gallery;
+package com.sp.milestrack.ui.record;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,20 +12,20 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.sp.milestrack.databinding.FragmentGalleryBinding;
 
-public class GalleryFragment extends Fragment {
+public class RecordFragment extends Fragment {
 
     private FragmentGalleryBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        GalleryViewModel galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
+        RecordViewModel recordViewModel =
+                new ViewModelProvider(this).get(RecordViewModel.class);
 
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textGallery;
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        recordViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

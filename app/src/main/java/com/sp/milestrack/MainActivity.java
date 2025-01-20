@@ -2,16 +2,12 @@ package com.sp.milestrack;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_record, R.id.nav_list)
                 .setOpenableLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -60,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.home) {
+                if (item.getItemId() == R.id.home_ic) {
                     navController.navigate(R.id.nav_home);
-                } else if (item.getItemId() == R.id.record) {
-                    navController.navigate(R.id.nav_gallery);
-                } else if (item.getItemId() == R.id.list) {
-                    navController.navigate(R.id.nav_slideshow);
+                } else if (item.getItemId() == R.id.record_ic) {
+                    navController.navigate(R.id.nav_record);
+                } else if (item.getItemId() == R.id.list_ic) {
+                    navController.navigate(R.id.nav_list);
                 }
                 else return false;
                 return true; // if in one of the if/if-else clauses
@@ -90,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
         int currentDestinationId = navController.getCurrentDestination().getId();
         MenuItem setNavIc;
         if (currentDestinationId == R.id.nav_home) {
-            setNavIc = bottomNavigationView.getMenu().findItem(R.id.home);
+            setNavIc = bottomNavigationView.getMenu().findItem(R.id.home_ic);
             setNavIc.setChecked(true);
-        } else if (R.id.nav_gallery == currentDestinationId) {
-            setNavIc = bottomNavigationView.getMenu().findItem(R.id.record);
+        } else if (R.id.nav_record == currentDestinationId) {
+            setNavIc = bottomNavigationView.getMenu().findItem(R.id.record_ic);
             setNavIc.setChecked(true);
-        } else if (R.id.nav_slideshow == currentDestinationId) {
-            setNavIc = bottomNavigationView.getMenu().findItem(R.id.list);
+        } else if (R.id.nav_list == currentDestinationId) {
+            setNavIc = bottomNavigationView.getMenu().findItem(R.id.list_ic);
             setNavIc.setChecked(true);
         }
     }
