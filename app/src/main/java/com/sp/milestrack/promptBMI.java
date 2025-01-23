@@ -5,18 +5,29 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+
 public class promptBMI extends AppCompatActivity {
-    private double weight;
-    private double height;
+    private EditText weight;
+    private EditText height;
     private Button next_prompt_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.prompt_bmi);
-        next_prompt_btn = findViewById(R.id.next_prompt_btn);
+
+        weight = findViewById(R.id.weightLossGoal);
+        height = findViewById(R.id.age);
+        next_prompt_btn = findViewById(R.id.submit_btn);
         next_prompt_btn.setOnClickListener(next_prompt);
+
+        weight.addTextChangedListener(blankCheck);
+        height.addTextChangedListener(blankCheck);
+        next_prompt_btn.setEnabled(false);
     }
     private View.OnClickListener next_prompt = new View.OnClickListener() {
         @Override
@@ -26,4 +37,23 @@ public class promptBMI extends AppCompatActivity {
             promptBMI.this.finish();
         }
     };
+    TextWatcher blankCheck = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String Weight = weight.getText().toString().trim();
+            String Height = height.getText().toString().trim();
+            next_prompt_btn.setEnabled(!Weight.isEmpty() && !Height.isEmpty());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
 }
+
