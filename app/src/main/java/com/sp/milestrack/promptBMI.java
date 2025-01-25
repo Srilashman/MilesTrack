@@ -30,6 +30,12 @@ public class promptBMI extends AppCompatActivity {
         weight.addTextChangedListener(blankCheck);
         height.addTextChangedListener(blankCheck);
         next_prompt_btn.setEnabled(false);
+        helper = new Database(this);
+        if (helper.ifPromptsDone()) {
+            Intent mainIntent = new Intent(promptBMI.this, MainActivity.class);
+            promptBMI.this.startActivity(mainIntent);
+            promptBMI.this.finish();
+        }
     }
     private View.OnClickListener next_prompt = new View.OnClickListener() {
         @Override

@@ -30,6 +30,11 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getAll() {
         return (getReadableDatabase().rawQuery("SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table", null));
     }
+    public boolean ifPromptsDone() {
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table", null);
+        if (cursor != null && cursor.moveToFirst()) return true;
+        return false;
+    }
 
     // Write a record into userinfo_table
     public void insert(double height, double weight, double age, String weightlossgoal) {
