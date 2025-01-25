@@ -44,6 +44,7 @@ public class promptAgeAndGoal extends AppCompatActivity {
 
             // Insert all values into the database
             helper.insert(height, weight, Age, WeightLossGoal);
+
             Intent mainIntent = new Intent(promptAgeAndGoal.this, MainActivity.class);
             promptAgeAndGoal.this.startActivity(mainIntent);
             promptAgeAndGoal.this.finish();
