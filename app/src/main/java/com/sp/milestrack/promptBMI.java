@@ -15,6 +15,7 @@ public class promptBMI extends AppCompatActivity {
     private EditText weight;
     private EditText height;
     private Button next_prompt_btn;
+    private Database helper = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +25,7 @@ public class promptBMI extends AppCompatActivity {
         height = findViewById(R.id.age);
         next_prompt_btn = findViewById(R.id.submit_btn);
         next_prompt_btn.setOnClickListener(next_prompt);
+        helper = new Database(this);
 
         weight.addTextChangedListener(blankCheck);
         height.addTextChangedListener(blankCheck);
@@ -32,7 +34,13 @@ public class promptBMI extends AppCompatActivity {
     private View.OnClickListener next_prompt = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Double Height = Double.parseDouble(height.getText().toString());
+            Double Weight = Double.parseDouble(weight.getText().toString());
+
             Intent mainIntent = new Intent(promptBMI.this, promptAgeAndGoal.class);
+            mainIntent.putExtra("height", Height);
+            mainIntent.putExtra("weight", Weight);
+
             promptBMI.this.startActivity(mainIntent);
             promptBMI.this.finish();
         }
