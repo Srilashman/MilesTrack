@@ -10,7 +10,8 @@
         android:name="com.sp.milestrack.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home"
-        app:popUpToSaveState="true"/>
+        app:popUpToSaveState="true"
+        />
 
     <fragment
         android:id="@+id/nav_record"

@@ -1,14 +1,32 @@
 package com.sp.milestrack;
 
+
+import static android.graphics.Color.parseColor;
+import static androidx.core.app.PendingIntentCompat.getActivity;
+import static androidx.core.content.ContentProviderCompat.requireContext;
+import static java.security.AccessController.getContext;
+
+import android.accessibilityservice.AccessibilityService;
+import android.app.UiModeManager;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,12 +37,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.sp.milestrack.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     public BottomNavigationView bottomNavigationView;
     NavController navController;
+    LineChart chart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +79,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.nav_view).setOnClickListener(v -> {
             navController.navigate(R.id.nav_home);
         });
+        chart = findViewById(R.id.chart);
+        //generateLineChart();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.home_ic) {
+                    chart = findViewById(R.id.chart);
+                    //generateLineChart();
                     navController.navigate(R.id.nav_home);
                 } else if (item.getItemId() == R.id.record_ic) {
                     navController.navigate(R.id.nav_record);
@@ -102,6 +127,29 @@ public class MainActivity extends AppCompatActivity {
             setNavIc = bottomNavigationView.getMenu().findItem(R.id.list_ic);
             setNavIc.setChecked(true);
         }
+    }
+    public void generateLineChart() {
+        if (chart != null) chart.clear();
+        // Sample data for the chart
+        ArrayList<Entry> entries = new ArrayList<>();
+        entries.add(new Entry(0, 1));
+        entries.add(new Entry(1, 2));
+        entries.add(new Entry(2, 3));
+        entries.add(new Entry(3, 4));
+
+        LineDataSet dataSet = new LineDataSet(entries, "Sample Data");
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
+            chart.getAxisLeft().setTextColor(parseColor("#FFFFFF")); // left y-axis
+            chart.getXAxis().setTextColor(parseColor("#FFFFFF"));
+            chart.getLegend().setTextColor(parseColor("#FFFFFF"));
+            chart.getDescription().setTextColor(parseColor("#FFFFFF"));
+            dataSet.setValueTextColor(parseColor("#FFFFFF"));
+        }
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.invalidate(); // Refresh chart
     }
 }
 //superman
