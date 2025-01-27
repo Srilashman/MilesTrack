@@ -3,6 +3,7 @@ package com.sp.milestrack.ui.home;
 import static android.graphics.Color.parseColor;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -41,7 +44,8 @@ public class HomeFragment extends Fragment {
         //homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         // Initialize the LineChart
         lineChart = root.findViewById(R.id.chart);
-
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getDescription().setEnabled(false);
         // Set up the ViewModel
         lineChartViewModel = new ViewModelProvider(this).get(LineChartViewModel.class);
 
@@ -73,6 +77,7 @@ public class HomeFragment extends Fragment {
             }
             LineData lineData = new LineData(dataSet);
             lineChart.setData(lineData);
+            setGridLines();
             lineChart.invalidate(); // Refresh the chart
         }
     }
@@ -93,5 +98,24 @@ public class HomeFragment extends Fragment {
             lineChart.getDescription().setTextColor(parseColor("#FFFFFF"));
         }
         lineChartViewModel.setChartData(entries);
+    }
+    private void setGridLines() {
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setDrawGridLines(false); // Remove X axis gridlines
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        xAxis.setAxisLineWidth(dpToPx(1f));   // Set the thickness of the axis line
+        xAxis.setAxisLineColor(Color.BLACK); // Set axis line color
+
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setDrawGridLines(true); // Ensure gridlines are enabled
+        leftAxis.setGridLineWidth(dpToPx(0.5f));   // Set the thickness of gridlines
+        leftAxis.setGridColor(parseColor("#808080")); // Set gridline color
+
+        leftAxis.setAxisLineWidth(dpToPx(1f));   // Set the thickness of the axis line
+        leftAxis.setAxisLineColor(Color.BLACK); // Set axis line color
+    }
+    float dpToPx(float dp) {
+        return dp * getResources().getDisplayMetrics().density;
     }
 }
