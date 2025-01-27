@@ -21,8 +21,8 @@ public class promptBMI extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.prompt_bmi);
 
-        weight = findViewById(R.id.weightLossGoal);
-        height = findViewById(R.id.age);
+        weight = findViewById(R.id.weight);
+        height = findViewById(R.id.height);
         next_prompt_btn = findViewById(R.id.submit_btn);
         next_prompt_btn.setOnClickListener(next_prompt);
         helper = new Database(this);
@@ -30,7 +30,6 @@ public class promptBMI extends AppCompatActivity {
         weight.addTextChangedListener(blankCheck);
         height.addTextChangedListener(blankCheck);
         next_prompt_btn.setEnabled(false);
-        helper = new Database(this);
         if (helper.ifPromptsDone()) {
             Intent mainIntent = new Intent(promptBMI.this, MainActivity.class);
             promptBMI.this.startActivity(mainIntent);
@@ -43,11 +42,10 @@ public class promptBMI extends AppCompatActivity {
             Double Height = Double.parseDouble(height.getText().toString());
             Double Weight = Double.parseDouble(weight.getText().toString());
 
-            Intent mainIntent = new Intent(promptBMI.this, promptAgeAndGoal.class);
-            mainIntent.putExtra("height", Height);
-            mainIntent.putExtra("weight", Weight);
-
-            promptBMI.this.startActivity(mainIntent);
+            Intent mainIntent1 = new Intent(promptBMI.this, promptAgeAndGoal.class);
+            mainIntent1.putExtra("height", Height);
+            mainIntent1.putExtra("weight", Weight);
+            promptBMI.this.startActivity(mainIntent1);
             promptBMI.this.finish();
         }
     };
