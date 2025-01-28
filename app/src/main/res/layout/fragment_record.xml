@@ -60,7 +60,8 @@
             </LinearLayout>
             <Button
                 android:id="@+id/submit_btn"
-                android:text="Submit"
+                android:text="Start"
+                android:backgroundTint="#999999"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
