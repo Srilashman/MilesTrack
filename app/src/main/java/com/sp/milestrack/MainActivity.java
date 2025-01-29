@@ -10,7 +10,9 @@ import android.accessibilityservice.AccessibilityService;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public BottomNavigationView bottomNavigationView;
     NavController navController;
     LineChart chart;
+    private static final String TAG = "MileTrack";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +65,30 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
         DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        NavigationView navigationView = binding.navView ;
+
+        // Add DrawerListener
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                for (int i = 0; i < navigationView.getMenu().size(); i++) {
+                    navigationView.getMenu().getItem(i).setChecked(false);
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -72,6 +98,25 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Log.d(TAG,"Enter Drawer");
+                if (item.getItemId() == R.id.nav_exit) {
+                    Log.d(TAG, "Exit menu item clicked");
+                    drawer.closeDrawer(GravityCompat.START);
+                    return true;
+                } else if(item.getItemId() == R.id.nav_edit_info){
+                    navController.navigate(R.id.nav_edit_info);
+                }
+                // Let NavController handle the rest
+                boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
+                if (handled) {
+                    drawer.closeDrawer(GravityCompat.START); // Close the drawer after navigation
+                }
+                return handled; // Indicate whether the event was handled
+            }
+        });
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             changeSelectedNavIc(); // Update the selected navigation item
@@ -100,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

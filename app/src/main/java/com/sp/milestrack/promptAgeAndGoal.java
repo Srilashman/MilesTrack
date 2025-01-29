@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.sp.milestrack.ui.edit_info.edit_info;
 
 public class promptAgeAndGoal extends AppCompatActivity {
     private EditText age;
@@ -17,6 +21,7 @@ public class promptAgeAndGoal extends AppCompatActivity {
     private Database helper = null;
     private double height;
     private double weight;
+    private static final String TAG = "MileTrack";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +48,8 @@ public class promptAgeAndGoal extends AppCompatActivity {
             String WeightLossGoal = weightLossGoal.getText().toString();
 
             // Insert all values into the database
-            helper.insert(height, weight, Age, WeightLossGoal);
+            long userId = helper.insert(height, weight, Age, WeightLossGoal);
+            Log.d(TAG, "Inserted User ID: " + userId);
 
             Intent mainIntent = new Intent(promptAgeAndGoal.this, MainActivity.class);
             promptAgeAndGoal.this.startActivity(mainIntent);

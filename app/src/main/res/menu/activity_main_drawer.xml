@@ -4,17 +4,19 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home"
-            android:title="@string/menu_home" />
+            android:id="@+id/nav_edit_info"
+            android:icon="@drawable/profile"
+            android:title="My Info" />
         <item
-            android:id="@+id/nav_record"
-            android:icon="@drawable/ic_record"
-            android:title="@string/menu_record" />
+            android:id="@+id/nav_about"
+            android:icon="@drawable/about"
+            android:title="About" />
         <item
-            android:id="@+id/nav_list"
-            android:icon="@drawable/ic_list"
-            android:title="@string/menu_list" />
+            android:id="@+id/nav_exit"
+            android:icon="@drawable/exit"
+            android:title="Exit"
+            android:checkable="true"/>
     </group>
 </menu>

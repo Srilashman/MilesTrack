@@ -30,20 +30,31 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getAll() {
         return (getReadableDatabase().rawQuery("SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table", null));
     }
+
     public boolean ifPromptsDone() {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table", null);
         if (cursor != null && cursor.moveToFirst()) return true;
         return false;
     }
 
+    public Cursor getById(String id) {
+        String[] args = {id};
+
+        return (getReadableDatabase().rawQuery(
+                "SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table WHERE _ID = ?", args));
+    }
+
     // Write a record into userinfo_table
-    public void insert(double height, double weight, double age, String weightlossgoal) {
+    public long insert(double height, double weight, double age, String weightlossgoal) {
         ContentValues cv = new ContentValues();
         cv.put("height", height);
         cv.put("weight", weight);
         cv.put("age", age);
         cv.put("weightlossgoal", weightlossgoal);
-        getWritableDatabase().insert("userinfo_table", "height", cv);
+        long userId = getWritableDatabase().insert("userinfo_table", "null", cv);
+
+        getWritableDatabase().close();
+        return userId;
     }
 
     public void update(String id, double height, double weight, double age, String weightlossgoal) {
@@ -54,6 +65,11 @@ public class Database extends SQLiteOpenHelper {
         cv.put("age", age);
         cv.put("weightlossgoal", weightlossgoal);
         getWritableDatabase().update("userinfo_table", cv, "_ID = ?", args);
+    }
+    public Cursor getLastRecord() {
+        // Select the last record by sorting by _id in descending order and limiting the result to 1
+        return getReadableDatabase().rawQuery(
+                "SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table ORDER BY _id DESC LIMIT 1", null);
     }
 
     public String getID(Cursor c) { return (c.getString(0)); }

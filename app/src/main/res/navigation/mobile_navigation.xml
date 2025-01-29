@@ -26,4 +26,18 @@
         android:label="@string/menu_list"
         tools:layout="@layout/fragment_list"
         app:popUpToSaveState="true"/>
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.sp.milestrack.ui.about.About"
+        android:label="About"
+        tools:layout="@layout/fragment_about"
+        app:popUpToSaveState="true"/>
+
+    <fragment
+        android:id="@+id/nav_edit_info"
+        android:name="com.sp.milestrack.ui.edit_info.edit_info"
+        android:label="My Info"
+        tools:layout="@layout/fragment_edit_info"
+        app:popUpToSaveState="true"/>
 </navigation>

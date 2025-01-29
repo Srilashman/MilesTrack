@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".About">
+    tools:context=".ui.about.About">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -20,7 +20,7 @@
         android:id="@+id/textView6"
         android:layout_width="247dp"
         android:layout_height="86dp"
-        android:layout_marginTop="312dp"
+        android:layout_marginTop="188dp"
         android:gravity="center_horizontal"
         android:text="MilesTrack, a fitness tracker app made by Clarence and Sri"
         android:textColor="#000000"
