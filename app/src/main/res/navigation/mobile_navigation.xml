@@ -18,7 +18,11 @@
         android:name="com.sp.milestrack.ui.record.RecordFragment"
         android:label="@string/menu_record"
         tools:layout="@layout/fragment_record"
-        app:popUpToSaveState="true"/>
+        app:popUpToSaveState="true">
+        <action
+            android:id="@+id/action_outdoor_to_indoor"
+            app:destination="@id/nav_indoor" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_list"
@@ -40,4 +44,15 @@
         android:label="My Info"
         tools:layout="@layout/fragment_edit_info"
         app:popUpToSaveState="true"/>
+    <fragment
+        android:id="@+id/nav_indoor"
+        android:name="com.sp.milestrack.ui.record.RecordIndoorFragment"
+        android:label="@string/menu_indoor"
+        tools:layout="@layout/fragment_record_indoor"
+        app:popUpToSaveState="true"
+        >
+        <action
+            android:id="@+id/action_indoor_to_outdoor"
+            app:destination="@id/nav_record" />
+    </fragment>
 </navigation>

@@ -10,6 +10,8 @@
     <string name="menu_home">Home</string>
     <string name="menu_record">Record</string>
     <string name="menu_list">List</string>
+    <string name="menu_outdoor">Outdoor</string>
+    <string name="menu_indoor">Indoor</string>
     <string-array name="sports_array">
         <item>Running</item>
         <item>Swimming</item>
@@ -17,4 +19,8 @@
         <item>Cycling</item>
         <item>Other</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open_drawer">Open navigation drawer</string>
+    <string name="close_drawer">Close navigation drawer</string>
 </resources>

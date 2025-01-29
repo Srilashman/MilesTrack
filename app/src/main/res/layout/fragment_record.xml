@@ -4,27 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/outdoor_frag"
     tools:context=".ui.record.RecordFragment">
 
-    <!--<TextView
-        android:id="@+id/text_gallery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="#00FF00"
         android:orientation="vertical"> <!-- Remove background color after put map-->
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -32,44 +20,101 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="record_rect"
                 android:src="@drawable/rectangle_record"
-                android:contentDescription="Image description" />
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
                 android:id="@+id/sport_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="20dp"
                 android:gravity="center_horizontal"
-                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sport: "
-                android:padding="5dp"
-                android:textColor="@color/black"/>
-            <Spinner
-                android:id="@+id/sport_choice"
-                android:layout_width="140dp"
-                android:layout_height="40dp"
-                android:padding="5dp"
-                android:spinnerMode="dropdown"
-                android:background="@drawable/spinner_shape" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Sport: "
+                    android:textColor="@color/black" />
+
+                <Spinner
+                    android:id="@+id/sport_choice"
+                    android:layout_width="140dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_shape"
+                    android:padding="5dp"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
+
             <Button
                 android:id="@+id/submit_btn"
-                android:text="Start"
-                android:backgroundTint="#999999"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="#999999"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:layout_marginTop="20dp"
+                android:text="Start"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sport_layout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="56dp"> <!-- this margin for bottom nav bar-->
+
+            <!-- Background Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="indoorOutdoorChoice"
+                app:tint="@color/black"
+                android:scaleY="-1"
+                android:src="@drawable/rectangle_record"/> <!-- scaleY=-1 to flip the image -->
+
+            <!-- Buttons Positioned Over the Image -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/outdoor_btn"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Outdoor"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/indoor_btn"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:backgroundTint="#999999"/>
+
+                <Button
+                    android:id="@+id/indoor_btn"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Indoor"
+                    app:layout_constraintStart_toEndOf="@id/outdoor_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:backgroundTint="#999999"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
