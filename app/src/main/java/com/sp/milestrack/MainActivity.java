@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     NavController navController;
     LineChart chart;
     private static final String TAG = "MileTrack";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
         DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView ;
+        NavigationView navigationView = binding.navView;
 
         // Add DrawerListener
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -101,12 +102,12 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Log.d(TAG,"Enter Drawer");
+                Log.d(TAG, "Enter Drawer");
                 if (item.getItemId() == R.id.nav_exit) {
                     Log.d(TAG, "Exit menu item clicked");
                     drawer.closeDrawer(GravityCompat.START);
                     return true;
-                } else if(item.getItemId() == R.id.nav_edit_info){
+                } else if (item.getItemId() == R.id.nav_edit_info) {
                     navController.navigate(R.id.nav_edit_info);
                 }
                 // Let NavController handle the rest
@@ -130,21 +131,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.home_ic) {
-                    chart = findViewById(R.id.chart);
-                    //generateLineChart();
                     navController.navigate(R.id.nav_home);
                 } else if (item.getItemId() == R.id.record_ic) {
                     navController.navigate(R.id.nav_record);
                 } else if (item.getItemId() == R.id.list_ic) {
                     navController.navigate(R.id.nav_list);
-                }
-                else return false;
+                } else return false;
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true; // if in one of the if/if-else clauses
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -158,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
     public void changeSelectedNavIc() {
         int currentDestinationId = navController.getCurrentDestination().getId();
         MenuItem setNavIc;
@@ -171,29 +171,6 @@ public class MainActivity extends AppCompatActivity {
             setNavIc = bottomNavigationView.getMenu().findItem(R.id.list_ic);
             setNavIc.setChecked(true);
         }
-    }
-    public void generateLineChart() {
-        if (chart != null) chart.clear();
-        // Sample data for the chart
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(0, 1));
-        entries.add(new Entry(1, 2));
-        entries.add(new Entry(2, 3));
-        entries.add(new Entry(3, 4));
-
-        LineDataSet dataSet = new LineDataSet(entries, "Sample Data");
-        int currentNightMode = getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
-            chart.getAxisLeft().setTextColor(parseColor("#FFFFFF")); // left y-axis
-            chart.getXAxis().setTextColor(parseColor("#FFFFFF"));
-            chart.getLegend().setTextColor(parseColor("#FFFFFF"));
-            chart.getDescription().setTextColor(parseColor("#FFFFFF"));
-            dataSet.setValueTextColor(parseColor("#FFFFFF"));
-        }
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate(); // Refresh chart
     }
 }
 //superman
