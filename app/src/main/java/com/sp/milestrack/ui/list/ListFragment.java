@@ -24,8 +24,8 @@ public class ListFragment extends Fragment {
         binding = FragmentListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
-        listViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        final TextView textView = binding.textSlideshow;
+//        listViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

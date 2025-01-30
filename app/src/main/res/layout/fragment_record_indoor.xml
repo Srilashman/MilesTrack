@@ -1,76 +1,270 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/indoor_frag"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
     tools:context=".ui.record.RecordIndoorFragment">
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Hello!"
-                android:gravity="center"/>
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="375dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Date"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/editTextText"
+                        android:layout_width="181dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentEnd="true"
+                        android:ems="10"
+                        android:hint="Enter Date"
+                        android:inputType="datetime|date"
+                        android:minHeight="48dp" />
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="31dp"
+                        android:layout_height="31dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="142dp"
+                        android:layout_marginTop="9dp"
+                        app:srcCompat="@drawable/calendar" />
+
+                    <EditText
+                        android:id="@+id/editTextTextPassword"
+                        android:layout_width="181dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Enter Time"
+                        android:inputType="datetime|time"
+                        android:minHeight="48dp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Sport"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/editTextText2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentEnd="true"
+                        android:ems="10"
+                        android:hint="Select Sport"
+                        android:inputType="text"
+                        android:minHeight="48dp" />
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="22dp"
+                        android:layout_height="13dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="12dp"
+                        app:srcCompat="@drawable/down_arrow" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Distance"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/editTextText4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="false"
+                        android:ems="10"
+                        android:hint="Enter Distance"
+                        android:inputType="number|numberDecimal"
+                        android:minHeight="48dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="km"
+                        android:textColor="#000000"
+                        android:textSize="19sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Duration"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/editTextText5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="false"
+                        android:ems="10"
+                        android:hint="Enter Duration"
+                        android:inputType="number|numberDecimal"
+                        android:minHeight="48dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="min"
+                        android:textColor="#000000"
+                        android:textSize="19sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Calories Loss"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+
+                <EditText
+                    android:id="@+id/editTextText6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="false"
+                    android:layout_alignParentEnd="true"
+                    android:ems="10"
+                    android:hint="Enter Calories Loss"
+                    android:inputType="number"
+                    android:minHeight="48dp" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#76E72A"
+                    android:text="Save"
+                    tools:cornerRadius="30dp" />
+
+            </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1" />
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="56dp"> <!-- this margin for bottom nav bar-->
 
-        <!-- Background Image -->
-        <ImageView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="indoorOutdoorChoice"
-            app:tint="@color/black"
-            android:scaleY="-1"
-            android:src="@drawable/rectangle_record"/> <!-- scaleY=-1 to flip the image -->
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="56dp"> <!-- this margin for bottom nav bar-->
 
-        <!-- Buttons Positioned Over the Image -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/outdoorbtn"
-                android:layout_width="120dp"
+            <!-- Background Image -->
+            <ImageView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Outdoor"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/indoorbtn"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:backgroundTint="#999999"/>
+                android:contentDescription="indoorOutdoorChoice"
+                android:scaleY="-1"
+                android:src="@drawable/rectangle_record"
+                app:tint="@color/black" /> <!-- scaleY=-1 to flip the image -->
 
-            <Button
-                android:id="@+id/indoorbtn"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="Indoor"
-                app:layout_constraintStart_toEndOf="@id/outdoorbtn"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:backgroundTint="#999999"/>
+            <!-- Buttons Positioned Over the Image -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/outdoorbtn"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#999999"
+                    android:text="Outdoor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/indoorbtn"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+                <Button
+                    android:id="@+id/indoorbtn"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#999999"
+                    android:text="Indoor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/outdoorbtn"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
