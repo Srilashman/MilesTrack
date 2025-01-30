@@ -1,5 +1,6 @@
 package com.sp.milestrack;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -25,6 +27,7 @@ public class promptBMI extends AppCompatActivity {
         height = findViewById(R.id.height);
         next_prompt_btn = findViewById(R.id.submit_btn);
         next_prompt_btn.setOnClickListener(next_prompt);
+        next_prompt_btn.setOnFocusChangeListener(checkFocus);
         helper = new Database(this);
 
         weight.addTextChangedListener(blankCheck);
@@ -66,6 +69,16 @@ public class promptBMI extends AppCompatActivity {
 
         }
     };
-
+    private View.OnFocusChangeListener checkFocus = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                if (v != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0); // hide keyboard when button is focused
+                }
+            }
+        }
+    };
 }
 
