@@ -19,198 +19,204 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="375dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_height="373dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Date"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <EditText
-                        android:id="@+id/editTextText"
-                        android:layout_width="181dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="false"
-                        android:layout_alignParentEnd="true"
-                        android:ems="10"
-                        android:hint="Enter Date"
-                        android:inputType="datetime|date"
-                        android:minHeight="48dp" />
-
-                    <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="31dp"
-                        android:layout_height="31dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="142dp"
-                        android:layout_marginTop="9dp"
-                        app:srcCompat="@drawable/calendar" />
-
-                    <EditText
-                        android:id="@+id/editTextTextPassword"
-                        android:layout_width="181dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:hint="Enter Time"
-                        android:inputType="datetime|time"
-                        android:minHeight="48dp" />
-
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Sport"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <EditText
-                        android:id="@+id/editTextText2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="false"
-                        android:layout_alignParentEnd="true"
-                        android:ems="10"
-                        android:hint="Select Sport"
-                        android:inputType="text"
-                        android:minHeight="48dp" />
-
-                    <ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="22dp"
-                        android:layout_height="13dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginEnd="12dp"
-                        app:srcCompat="@drawable/down_arrow" />
-                </RelativeLayout>
-
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Distance"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <EditText
-                        android:id="@+id/editTextText4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="false"
-                        android:ems="10"
-                        android:hint="Enter Distance"
-                        android:inputType="number|numberDecimal"
-                        android:minHeight="48dp" />
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textView"
+                        android:layout_width="250dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="10dp"
-                        android:text="km"
+                        android:layout_marginBottom="10dp"
+                        android:text="Date"
                         android:textColor="#000000"
-                        android:textSize="19sp" />
-                </RelativeLayout>
+                        android:textSize="22sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editTextText"
+                            android:layout_width="181dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="false"
+                            android:layout_alignParentEnd="true"
+                            android:ems="10"
+                            android:hint="Enter Date"
+                            android:inputType="datetime|date"
+                            android:minHeight="48dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="31dp"
+                            android:layout_height="31dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginStart="142dp"
+                            android:layout_marginTop="9dp"
+                            app:srcCompat="@drawable/calendar" />
+
+                        <EditText
+                            android:id="@+id/editTextTextPassword"
+                            android:layout_width="181dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="Enter Time"
+                            android:inputType="datetime|time"
+                            android:minHeight="48dp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Sport"
+                        android:textColor="#000000"
+                        android:textSize="22sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editTextText2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="false"
+                            android:layout_alignParentEnd="true"
+                            android:ems="10"
+                            android:hint="Select Sport"
+                            android:inputType="text"
+                            android:minHeight="48dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="22dp"
+                            android:layout_height="13dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="18dp"
+                            android:layout_marginEnd="12dp"
+                            app:srcCompat="@drawable/down_arrow" />
+                    </RelativeLayout>
 
 
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Duration"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Distance"
+                        android:textColor="#000000"
+                        android:textSize="22sp" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editTextText4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="false"
+                            android:ems="10"
+                            android:hint="Enter Distance"
+                            android:inputType="number|numberDecimal"
+                            android:minHeight="48dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="km"
+                            android:textColor="#000000"
+                            android:textSize="19sp" />
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Duration"
+                        android:textColor="#000000"
+                        android:textSize="22sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editTextText5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="false"
+                            android:ems="10"
+                            android:hint="Enter Duration"
+                            android:inputType="number|numberDecimal"
+                            android:minHeight="48dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="min"
+                            android:textColor="#000000"
+                            android:textSize="19sp" />
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Calories Loss"
+                        android:textColor="#000000"
+                        android:textSize="22sp" />
 
                     <EditText
-                        android:id="@+id/editTextText5"
+                        android:id="@+id/editTextText6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="false"
+                        android:layout_alignParentEnd="true"
                         android:ems="10"
-                        android:hint="Enter Duration"
-                        android:inputType="number|numberDecimal"
+                        android:hint="Enter Calories Loss"
+                        android:inputType="number"
                         android:minHeight="48dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="280dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="10dp"
-                        android:text="min"
-                        android:textColor="#000000"
-                        android:textSize="19sp" />
-                </RelativeLayout>
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:backgroundTint="#76E72A"
+                        android:text="Save"
+                        app:cornerRadius="30dp" />
 
-
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Calories Loss"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
-
-                <EditText
-                    android:id="@+id/editTextText6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="false"
-                    android:layout_alignParentEnd="true"
-                    android:ems="10"
-                    android:hint="Enter Calories Loss"
-                    android:inputType="number"
-                    android:minHeight="48dp" />
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="280dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="#76E72A"
-                    android:text="Save"
-                    tools:cornerRadius="30dp" />
-
-            </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
