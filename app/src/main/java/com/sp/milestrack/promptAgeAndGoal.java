@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.sp.milestrack.ui.edit_info.edit_info;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class promptAgeAndGoal extends AppCompatActivity {
     private EditText age;
     private EditText weightLossGoal;
@@ -50,9 +53,17 @@ public class promptAgeAndGoal extends AppCompatActivity {
             Double Age = Double.parseDouble(age.getText().toString());
             String WeightLossGoal = weightLossGoal.getText().toString();
 
+            double WeightLossGoalValue = Double.parseDouble(WeightLossGoal);
+            if (WeightLossGoalValue >= weight) {
+                Toast.makeText(promptAgeAndGoal.this, "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
+                return; // Exit the method, preventing database insertion and navigation
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDate = sdf.format(new Date());
+
             // Insert all values into the database
-            long userId = helper.insert(height, weight, Age, WeightLossGoal);
-            Log.d(TAG, "Inserted User ID: " + userId);
+            long userId = helper.insert(currentDate, height, weight, Age, WeightLossGoal);
+            Log.d(TAG, "Inserted User ID: " + userId + ", " + currentDate);
 
             Intent mainIntent = new Intent(promptAgeAndGoal.this, MainActivity.class);
             promptAgeAndGoal.this.startActivity(mainIntent);
