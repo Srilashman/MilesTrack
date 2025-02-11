@@ -8,7 +8,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -32,6 +36,14 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private LineChart lineChart;
     private LineChartViewModel lineChartViewModel;
+    private TextView planText;
+    private ImageView cal_ic;
+    private CalendarView cal;
+    private LinearLayout cal_layout;
+    private boolean isStartDateSelected = false;
+    private String startDate = "", endDate = "";
+    private TextView selectedDates;
+    private TextView calPrompt;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -51,6 +63,28 @@ public class HomeFragment extends Fragment {
 
         // Observe the chart data
         lineChartViewModel.getChartData().observe(getViewLifecycleOwner(), this::updateLineChart);
+        planText = root.findViewById(R.id.plan);
+        cal_ic = root.findViewById(R.id.calendar_ic);
+        cal = root.findViewById(R.id.cal);
+        cal_layout = root.findViewById(R.id.cal_layout);
+        calPrompt = root.findViewById(R.id.cal_prompt);
+        selectedDates = root.findViewById(R.id.selected_dates);
+        cal_layout.setVisibility(View.GONE);
+        cal_ic.setOnClickListener(toggleCal);
+        cal.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            String selectedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
+            if (!isStartDateSelected) {
+                startDate = selectedDate;
+                isStartDateSelected = true;
+                selectedDates.setText("Start Date: " + startDate);
+                calPrompt.setText("Enter your end date");
+            } else {
+                endDate = selectedDate;
+                selectedDates.setText("Start Date: " + startDate + "\nEnd Date: " + endDate);
+                isStartDateSelected = false; // Reset for next selection
+                calPrompt.setVisibility(View.GONE);
+            }
+        });
 
         // Simulate data update
         simulateData();
@@ -74,6 +108,7 @@ public class HomeFragment extends Fragment {
                     & Configuration.UI_MODE_NIGHT_MASK;
             if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
                 dataSet.setValueTextColor(parseColor("#FFFFFF"));
+                planText.setTextColor(parseColor("#FFFFFF"));
             }
             LineData lineData = new LineData(dataSet);
             lineChart.setData(lineData);
@@ -118,4 +153,18 @@ public class HomeFragment extends Fragment {
     float dpToPx(float dp) {
         return dp * getResources().getDisplayMetrics().density;
     }
+
+    private View.OnClickListener toggleCal = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (cal_layout.getVisibility() == View.VISIBLE) {
+                cal_layout.animate().alpha(0.0f).setDuration(300).withEndAction(() -> cal_layout.setVisibility(View.GONE));
+            } else {
+                cal_layout.setVisibility(View.VISIBLE);
+                cal_layout.animate().alpha(1.0f).setDuration(300);
+            }
+
+        }
+    };
+
 }
