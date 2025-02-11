@@ -21,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />-->
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -140,13 +141,21 @@
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="178dp"
+        android:layout_marginTop="168dp"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.LineChart>
 
-    </com.github.mikephil.charting.charts.LineChart>
-
+    <TextView
+        android:id="@+id/plan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Training Plan"
+        android:textColor="?attr/colorPrimaryDark"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chart" />
 </androidx.constraintlayout.widget.ConstraintLayout>

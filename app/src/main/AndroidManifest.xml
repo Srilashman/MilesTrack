@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.samsung.android.sdk.accessory.permission.ACCESSORY" />
 
     <application
         android:allowBackup="true"
@@ -17,9 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MilesTrack"
         tools:targetApi="31">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value= "@string/API_KEY" />
+            android:value="@string/API_KEY" />
 
         <activity
             android:name=".splashScreen"
@@ -46,6 +48,22 @@
         </activity>
         <activity android:name=".promptBMI" />
         <activity android:name=".promptAgeAndGoal" />
+
+        <service
+            android:name=".LocationTrackingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.sp.milestrack.ACTION_TRACK_LOCATION" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".LocationTrackingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="LOCATION_UPDATE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
