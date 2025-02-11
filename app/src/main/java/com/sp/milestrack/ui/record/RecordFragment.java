@@ -44,6 +44,7 @@ public class RecordFragment extends Fragment implements OnMapReadyCallback {
     private FragmentRecordBinding binding;
     private Button indoor_btn;
     private Button outdoor_btn;
+    private Button start_btn;
     private AppBarConfiguration mAppBarConfiguration;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -79,6 +80,8 @@ public class RecordFragment extends Fragment implements OnMapReadyCallback {
         indoor_btn.setOnClickListener(indoor_form);
         outdoor_btn = root.findViewById(R.id.outdoor_btn);
         outdoor_btn.setEnabled(false);
+        start_btn = root.findViewById(R.id.submit_btn);
+        start_btn.setOnClickListener(goToRecordData);
         // Initialize Google Map
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapFragment);
@@ -98,6 +101,17 @@ public class RecordFragment extends Fragment implements OnMapReadyCallback {
         public void onClick(View v) {
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(R.id.action_outdoor_to_indoor);
+        }
+    };
+    private View.OnClickListener goToRecordData = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Spinner mySpinner = (Spinner) requireView().findViewById(R.id.sport_choice);
+            String text = mySpinner.getSelectedItem().toString();
+            Bundle bundle = new Bundle();
+            bundle.putString("sportChoice", text);
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.action_startRecording, bundle);
         }
     };
     @Override
