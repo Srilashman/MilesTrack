@@ -11,7 +11,11 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home"
         app:popUpToSaveState="true"
-        />
+        >
+        <action
+            android:id="@+id/action_nav_home_to_nav_edit_info"
+            app:destination="@id/nav_edit_info" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_record"

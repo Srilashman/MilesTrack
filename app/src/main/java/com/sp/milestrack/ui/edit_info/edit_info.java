@@ -20,6 +20,10 @@ import com.sp.milestrack.MainActivity;
 import com.sp.milestrack.R;
 import com.sp.milestrack.databinding.FragmentAboutBinding;
 import com.sp.milestrack.databinding.FragmentEditInfoBinding;
+import com.sp.milestrack.promptAgeAndGoal;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class edit_info extends Fragment {
 
@@ -60,6 +64,10 @@ public class edit_info extends Fragment {
             binding.editweight.setText(String.valueOf(helper.getWeight(c)));
             binding.editage.setText(String.valueOf(helper.getAge(c)));
             binding.editweightlossgoal.setText(String.valueOf(helper.getWeightLossGoal(c)));
+
+            String date = helper.getDate(c);  // Fetching the date
+            Log.d(TAG,"Date: " + date);
+            c.close();
         } else {
             Log.d(TAG, "No data found for user ID: " + user_id);
         }
@@ -86,10 +94,18 @@ public class edit_info extends Fragment {
                 Double EditWeight = Double.parseDouble(binding.editweight.getText().toString());
                 Double EditAge = Double.parseDouble(binding.editage.getText().toString());
                 String EditWeightLossGoal = binding.editweightlossgoal.getText().toString();
+                double WeightLossGoalValue = Double.parseDouble(EditWeightLossGoal);
+                if (WeightLossGoalValue >= EditWeight) {
+                    Toast.makeText(getContext(), "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
+                    return; // Exit the method, preventing database insertion and navigation
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String currentDate = sdf.format(new Date());
+
 
                 String user_id = helper.getID(c);
                 if (user_id != null) {
-                    helper.update(user_id, EditHeight, EditWeight, EditAge, EditWeightLossGoal);
+                    helper.update(user_id, currentDate, EditHeight, EditWeight, EditAge, EditWeightLossGoal);
                     Log.d(TAG, "User_id not null" + user_id);
                 } else {
                     Log.d(TAG, EditWeightLossGoal);

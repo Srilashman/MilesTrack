@@ -17,7 +17,7 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Will be called once when the database is not created
-        db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " height REAL, weight REAL, age REAL, weightlossgoal TEXT);");
+        db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, height REAL, weight REAL, age REAL, weightlossgoal TEXT);");
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Database extends SQLiteOpenHelper {
 
     // Read all records from userinfo_table
     public Cursor getAll() {
-        return (getReadableDatabase().rawQuery("SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table", null));
+        return (getReadableDatabase().rawQuery("SELECT _id, date, height, weight, age, weightlossgoal FROM userinfo_table", null));
     }
 
     public boolean ifPromptsDone() {
@@ -41,12 +41,13 @@ public class Database extends SQLiteOpenHelper {
         String[] args = {id};
 
         return (getReadableDatabase().rawQuery(
-                "SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table WHERE _ID = ?", args));
+                "SELECT _id, date, height, weight, age, weightlossgoal FROM userinfo_table WHERE _ID = ?", args));
     }
 
     // Write a record into userinfo_table
-    public long insert(double height, double weight, double age, String weightlossgoal) {
+    public long insert(String date, double height, double weight, double age, String weightlossgoal) {
         ContentValues cv = new ContentValues();
+        cv.put("date", date);  // Add date to ContentValues
         cv.put("height", height);
         cv.put("weight", weight);
         cv.put("age", age);
@@ -57,9 +58,10 @@ public class Database extends SQLiteOpenHelper {
         return userId;
     }
 
-    public void update(String id, double height, double weight, double age, String weightlossgoal) {
+    public void update(String id, String date, double height, double weight, double age, String weightlossgoal) {
         ContentValues cv = new ContentValues();
         String[] args = {id};
+        cv.put("date", date);  // Add date to ContentValues
         cv.put("height", height);
         cv.put("weight", weight);
         cv.put("age", age);
@@ -69,22 +71,29 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getLastRecord() {
         // Select the last record by sorting by _id in descending order and limiting the result to 1
         return getReadableDatabase().rawQuery(
-                "SELECT _id, height, weight, age, weightlossgoal FROM userinfo_table ORDER BY _id DESC LIMIT 1", null);
+                "SELECT _id, date, height, weight, age, weightlossgoal FROM userinfo_table ORDER BY _id DESC LIMIT 1", null);
+    }
+
+    public Cursor getAllBMIRecords() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT date, weight, height FROM userinfo_table", null);
     }
 
     public String getID(Cursor c) { return (c.getString(0)); }
-    public double getHeight(Cursor c) {
-        return (c.getDouble(1));
-    }
+    public String getDate(Cursor c) {return c.getString(1);}  // Assuming 'date' is the second column (_id is first)
 
-    public double getWeight(Cursor c) {
+    public double getHeight(Cursor c) {
         return (c.getDouble(2));
     }
 
-    public double getAge(Cursor c) {
+    public double getWeight(Cursor c) {
         return (c.getDouble(3));
     }
+
+    public double getAge(Cursor c) {
+        return (c.getDouble(4));
+    }
     public String getWeightLossGoal(Cursor c) {
-        return (c.getString(4));
+        return (c.getString(5));
     }
 }
