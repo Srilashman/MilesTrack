@@ -5,6 +5,7 @@ import static android.graphics.Color.parseColor;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -60,6 +61,7 @@ public class HomeFragment extends Fragment {
     private LineChart lineChart;
     private LineChartViewModel lineChartViewModel;
     private TextView planText;
+    private TextView recordText;
     private ImageView cal_ic;
     private CalendarView cal;
     private LinearLayout cal_layout;
@@ -69,6 +71,7 @@ public class HomeFragment extends Fragment {
     private TextView calPrompt;
     private Database helper = null;
     private LinearLayout workoutLayout;
+    private static final String TAG = "MileTrack";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class HomeFragment extends Fragment {
         // Observe the chart data
         lineChartViewModel.getChartData().observe(getViewLifecycleOwner(), this::updateLineChart);
         planText = root.findViewById(R.id.plan);
+        recordText = root.findViewById(R.id.recordbmitext);
         cal_ic = root.findViewById(R.id.calendar_ic);
         cal = root.findViewById(R.id.cal);
         cal_layout = root.findViewById(R.id.cal_layout);
@@ -196,8 +200,23 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
     private void updateLineChart(List<Entry> entries) {
-        if (entries != null) {
-            LineDataSet dataSet = new LineDataSet(entries, "Sample Data");
+        if (entries != null && !entries.isEmpty()) {
+            LineData currentData = lineChart.getData();
+            if (currentData == null) {
+                currentData = new LineData();
+                lineChart.setData(currentData);
+            }
+
+            LineDataSet dataSet = (LineDataSet) currentData.getDataSetByIndex(0);
+            if (dataSet == null) {
+                dataSet = new LineDataSet(new ArrayList<>(), "Sample Data");
+                currentData.addDataSet(dataSet);
+            }
+
+            for (Entry entry : entries) {
+//                Log.d(TAG, "Month: " + entry.getX() + ", BMI: " + entry.getY());
+                dataSet.addEntry(entry);
+            }
             dataSet.setColor(getResources().getColor(R.color.purple_200));
             dataSet.setLineWidth(2f);
             dataSet.setCircleRadius(4f);
@@ -207,6 +226,7 @@ public class HomeFragment extends Fragment {
             if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
                 dataSet.setValueTextColor(parseColor("#FFFFFF"));
                 planText.setTextColor(parseColor("#FFFFFF"));
+                recordText.setTextColor(parseColor("#FFFFFF"));
             }
             LineData lineData = new LineData(dataSet);
             lineChart.setData(lineData);
@@ -303,6 +323,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadMonthlyAverageBMI() {
+        Log.d(TAG, "loadMonthlyAverageBMI triggered");
         Cursor cursor = helper.getAllBMIRecords();
         if (cursor != null && cursor.moveToFirst()) {
 
@@ -314,44 +335,60 @@ public class HomeFragment extends Fragment {
             int weightIndex = cursor.getColumnIndex("weight");
             int heightIndex = cursor.getColumnIndex("height");
 
-            if (dateIndex != -1 && weightIndex != -1 && heightIndex != -1){
-            do {
-                // Get weight and height from the database
-                String dateString = cursor.getString(dateIndex);
-                double weight = cursor.getDouble(weightIndex);
-                double height = cursor.getDouble(heightIndex);
+            if (dateIndex != -1 && weightIndex != -1 && heightIndex != -1) {
+                do {
+                    // Get weight and height from the database
+                    String dateString = cursor.getString(dateIndex);
+                    double weight = cursor.getDouble(weightIndex);
+                    double height = cursor.getDouble(heightIndex);
 
-                // Calculate BMI = weight / (height * height) [Assuming height is in meters]
-                double bmi = weight / (height * height);
+                    // Calculate BMI = weight / (height * height) [Assuming height is in meters]
+                    double bmi = weight / (height * height);
 
-                int monthIndex = getMonthIndex(dateString);  // Helper method to extract month (0 for Jan, 11 for Dec)
+                    int monthIndex = getMonthIndex(dateString);  // Helper method to extract month (0 for Jan, 11 for Dec)
 
-                if (monthIndex != -1) {  // Check if the date was parsed successfully
-                    totalBMI[monthIndex] += bmi;
-                    countPerMonth[monthIndex]++;
+                    if (monthIndex != -1) {  // Check if the date was parsed successfully
+                        totalBMI[monthIndex] += bmi;
+                        countPerMonth[monthIndex]++;
+                    }
+                } while (cursor.moveToNext());
+
+                cursor.close();
+
+                // Prepare entries for the LineChart
+                List<Entry> entries = new ArrayList<>();
+                for (int i = 0; i < 12; i++) {
+                    if (countPerMonth[i] > 0) {
+                        double avgBMI = totalBMI[i] / countPerMonth[i];
+
+                        Log.d(TAG, "Month: " + (i + 1) + ", Total BMI: " + totalBMI[i] + ", Count: " + countPerMonth[i] + ", Avg BMI: " + avgBMI);
+                        entries.add(new Entry(i, (float) avgBMI));
+                    }
                 }
-            } while (cursor.moveToNext());
 
-            cursor.close();
+                // Log the entries list
+//                for (Entry entry : entries) {
+//                    Log.d(TAG, "Month: " + entry.getX() + ", BMI: " + entry.getY());
+//                }
+                // Update the LineChart with averaged data
+                updateLineChart(entries);
 
-            // Prepare entries for the LineChart
-            List<Entry> entries = new ArrayList<>();
-            for (int i = 0; i < 12; i++) {
-                if (countPerMonth[i] > 0) {
-                    double avgBMI = totalBMI[i] / countPerMonth[i];
-                    entries.add(new Entry(i, (float) avgBMI));
-                }
-            }
-
-            // Update the LineChart with averaged data
-            lineChartViewModel.setChartData(entries);
             } else {
-                Log.e("DB_ERROR", "One or more columns are missing in the query result.");
+                Log.e(TAG, "One or more columns are missing in the query result.");
             }
 
             cursor.close();
         } else {
             lineChartViewModel.setChartData(new ArrayList<>());
+        }
+
+        int currentNightMode = getResources().getConfiguration().uiMode
+        & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
+            lineChart.getAxisLeft().setTextColor(parseColor("#FFFFFF")); // left y-axis
+            lineChart.getXAxis().setTextColor(parseColor("#FFFFFF"));
+            lineChart.getLegend().setTextColor(parseColor("#FFFFFF"));
+            lineChart.getDescription().setTextColor(parseColor("#FFFFFF"));
         }
     }
 

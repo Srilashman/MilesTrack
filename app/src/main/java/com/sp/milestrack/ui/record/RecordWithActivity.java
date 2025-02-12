@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
@@ -16,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.os.Handler;
 import android.util.Log;
@@ -36,6 +39,7 @@ import com.sp.milestrack.LocationTrackingService;
 import com.sp.milestrack.R;
 
 import java.util.ArrayList;
+import com.sp.milestrack.Database;
 
 
 public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
@@ -44,13 +48,21 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
     private BroadcastReceiver locationReceiver;
     private ArrayList<LatLng> routePoints = new ArrayList<>();
     private TextView distanceTextView;
+    private TextView caloriesTextView;
+    private TextView stepsTextView;
     private Polyline routeLine;
     private LatLng latestLocation; // Store the latest location
     TextView timerTextView;
     Button start_stop_btn;
+    Button stop_record_btn;
     long startTime = 0;
     long elapsedTime = 0;
     boolean isStarted = false;
+    private Database helper = null;
+    private double previousDistance = 0.0;
+    private long previousTime = 0;
+    private double totalCaloriesBurned = 0.0;
+    private String activityType = "Running"; // Default activity type
 
     //runs without a timer by reposting this handler at the end of the runnable
     Handler timerHandler = new Handler();
@@ -70,6 +82,57 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
             }
         }
     };
+
+    Handler speedHandler = new Handler();
+    Runnable speedRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isTracking) {
+                long currentTime = System.currentTimeMillis();
+                double currentDistance = Double.parseDouble(distanceTextView.getText().toString().replace("Distance: ", "").replace(" km", ""));
+                double weightInKg = 70; // Default weight if database doesn't return anything
+
+                // Calculate speed in m/s
+                double distanceDelta = (currentDistance - previousDistance) * 1000; // Convert km to m
+                double timeDelta = (currentTime - previousTime) / 1000.0; // Convert ms to seconds
+
+                if (timeDelta > 0) {
+                    double speedMps = distanceDelta / timeDelta;
+                    double speedKmph = speedMps * 3.6;
+                    double durationInHours = 5.0 / 3600.0; // Since we calculate every 5 seconds
+
+
+                    // Update MET based on activity and speed
+                    double MET = getMET(activityType, speedKmph);
+
+                    //get user weight
+                    Cursor c = helper.getLastRecord();
+                    if (c != null && c.moveToLast()) {
+                        weightInKg = helper.getWeight(c);
+                    }
+
+                    if (distanceDelta > 0) {
+                        // Calculate calories burned
+                        double caloriesBurned = MET * weightInKg * durationInHours;
+                        totalCaloriesBurned += caloriesBurned;
+                    }
+
+                    caloriesTextView.setText(String.format("Calories: %.2f", totalCaloriesBurned));
+
+                    Log.d("Speed", String.format("Speed: %.2f km/h", speedKmph));
+                    Log.d("MET", String.format("MET: %.2f", MET));
+                    Log.d("Calories", String.format("Calories this interval: %.2f", totalCaloriesBurned));
+                }
+
+                // Update previous values for the next calculation
+                previousDistance = currentDistance;
+                previousTime = currentTime;
+
+                // Re-run every 5 seconds
+                speedHandler.postDelayed(this, 5000);
+            }
+        }
+    };
     private boolean isTracking = true; // Controls whether we add new points
 
     @Nullable
@@ -78,10 +141,15 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_record_with_activity, container, false);
 
         distanceTextView = view.findViewById(R.id.distance);
+        caloriesTextView = view.findViewById(R.id.calories);
+        stepsTextView = view.findViewById(R.id.steps);
         TextView sport = view.findViewById(R.id.activity);
         timerTextView = (TextView) view.findViewById(R.id.time);
         start_stop_btn = (Button) view.findViewById(R.id.start_stop_button);
         start_stop_btn.setOnClickListener(start_stop);
+        stop_record_btn = (Button) view.findViewById(R.id.stop_btn);
+        stop_record_btn.setOnClickListener(stop);
+        helper = new Database(requireContext());
 
         Bundle args = getArguments();
         if (args != null) {
@@ -120,6 +188,15 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
             }
         }
     };
+
+    private View.OnClickListener stop = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.nav_list);
+        }
+    };
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -146,8 +223,13 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
                     double totalDistance = intent.getDoubleExtra("total_distance", 0.0) /1000; // convert to km
                     routePoints = intent.getParcelableArrayListExtra("route_points");
 
+                    double distanceInMeters = totalDistance * 1000;
+                    double strideLength = 0.762; // meters per step
+                    double stepsCount = distanceInMeters / strideLength;
+
                     // Update UI
                     distanceTextView.setText(String.format("Distance: %.2f km", totalDistance));
+                    stepsTextView.setText(String.format("Steps: %.0f", stepsCount));
 
                     // Update route on the map
                     if (routeLine != null) {
@@ -175,6 +257,12 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
                                 startTime = System.currentTimeMillis();
                                 timerHandler.postDelayed(timerRunnable, 0);
                                 isStarted = true;
+
+                                startTime = System.currentTimeMillis();
+                                timerHandler.postDelayed(timerRunnable, 0);  // Start timer
+                                speedHandler.postDelayed(speedRunnable, 5000);  // Start speed calculation every 5 sec
+                                isStarted = true;
+
                             }
                         }
                     }
@@ -210,4 +298,50 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
         Intent serviceIntent = new Intent(requireContext(), LocationTrackingService.class);
         requireContext().stopService(serviceIntent);
     }
+
+    private void calculateStepsAndCalories(double totalDistance) {
+        // Convert distance from km to meters
+        double distanceInMeters = totalDistance * 1000;
+
+        // Estimate steps based on average stride length
+        double strideLength = 0.762; // meters per step (adjust if needed)
+        double stepsCount = distanceInMeters / strideLength;
+
+        // Assuming a weight of 70 kg and moderate walking (3.5 MET)
+        double weightInKg = 70;
+        double MET = 3.5;  // You can adjust MET depending on walking speed or activity type
+
+        // Calculate calories burned
+        double caloriesBurned = MET * weightInKg * totalDistance;
+
+        // Display or log results
+        Log.d("Activity", "Steps: " + (int)stepsCount);
+        Log.d("Activity", "Calories burned: " + caloriesBurned);
+    }
+    private double getMET(String activity, double speedKmph) {
+        switch (activity) {
+            case "Running":
+                if (speedKmph < 2) return 0;
+                else if (speedKmph <= 4) return 2.9;
+                else if (speedKmph <= 5) return 3.5;
+                else if (speedKmph <= 6) return 4.5;
+                else if (speedKmph <= 8) return 8.3;
+                else if (speedKmph <= 10) return 9.8;
+                else return 11.0;
+            case "Cycling":
+                if (speedKmph <= 16) return 4.0;
+                else if (speedKmph <= 19) return 6.8;
+                else return 8.0;
+            case "Swimming":
+                if (speedKmph <= 2) return 5.8;  // Light effort
+                else if (speedKmph <= 3) return 8.3;  // Moderate
+                else return 11.0;  // Vigorous
+            case "Hiking":
+                if (speedKmph <= 5) return 6.0;
+                else return 7.8;
+            default:
+                return 3.5;  // Default for moderate activity
+        }
+    }
+
 }

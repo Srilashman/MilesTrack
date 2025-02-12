@@ -31,7 +31,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,7 +132,7 @@
                 android:paddingBottom="10dp">
 
                 <TextView
-                    android:id="@+id/textView24"
+                    android:id="@+id/recordbmitext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -161,8 +162,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:padding="10dp">
 
                 <TextView
@@ -188,8 +189,7 @@
                 android:id="@+id/cal_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                android:orientation="vertical">
 
                 <CalendarView
                     android:id="@+id/cal"
@@ -201,16 +201,16 @@
                     android:id="@+id/cal_prompt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="10dp"
                     android:text="Select a start date"
-                    android:textSize="18sp"
-                    android:padding="10dp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/selected_dates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"

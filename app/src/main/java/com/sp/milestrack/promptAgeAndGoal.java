@@ -1,7 +1,10 @@
 package com.sp.milestrack;
 
+import static android.graphics.Color.parseColor;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -46,23 +49,40 @@ public class promptAgeAndGoal extends AppCompatActivity {
         Intent intent = getIntent();
         height = intent.getDoubleExtra("height", 0);
         weight = intent.getDoubleExtra("weight", 0);
+
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
+            age.setTextColor(parseColor("#000000"));
+            weightLossGoal.setTextColor(parseColor("#000000"));
+        }
     }
     private View.OnClickListener submit = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Double Age = Double.parseDouble(age.getText().toString());
-            String WeightLossGoal = weightLossGoal.getText().toString();
+            String WeightLossGoal = weightLossGoal.getText().toString().toLowerCase();
 
-            double WeightLossGoalValue = Double.parseDouble(WeightLossGoal);
-            if (WeightLossGoalValue >= weight) {
-                Toast.makeText(promptAgeAndGoal.this, "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
-                return; // Exit the method, preventing database insertion and navigation
+            // Validate Weight Loss Goal input
+            if (!helper.isValidWeightLossGoal(WeightLossGoal)) {
+                Toast.makeText(promptAgeAndGoal.this, "Please enter a number or 'nil' for the Weight Loss Goal", Toast.LENGTH_SHORT).show();
+                helper.close();
+                return;
             }
+
+            double WeightLossGoalValue = helper.parseWeightLossGoal(WeightLossGoal);
+
+            // Business logic: Check if weight loss goal is valid
+            if (WeightLossGoalValue >= weight && WeightLossGoalValue != 0) {
+                Toast.makeText(promptAgeAndGoal.this, "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
+                helper.close();
+                return;
+            }
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String currentDate = sdf.format(new Date());
 
             // Insert all values into the database
-            long userId = helper.insert(currentDate, height, weight, Age, WeightLossGoal);
+            long userId = helper.insert(currentDate, height, weight, Age, WeightLossGoalValue);
             Log.d(TAG, "Inserted User ID: " + userId + ", " + currentDate);
 
             Intent mainIntent = new Intent(promptAgeAndGoal.this, MainActivity.class);
