@@ -1,7 +1,10 @@
 package com.sp.milestrack;
 
+import static android.graphics.Color.parseColor;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +15,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class promptBMI extends AppCompatActivity {
     private EditText weight;
     private EditText height;
+
     private Button next_prompt_btn;
     private Database helper = null;
     @Override
@@ -37,6 +42,12 @@ public class promptBMI extends AppCompatActivity {
             Intent mainIntent = new Intent(promptBMI.this, MainActivity.class);
             promptBMI.this.startActivity(mainIntent);
             promptBMI.this.finish();
+        }
+
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
+            height.setTextColor(parseColor("#000000"));
+            weight.setTextColor(parseColor("#000000"));
         }
     }
     private View.OnClickListener next_prompt = new View.OnClickListener() {

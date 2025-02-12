@@ -47,14 +47,15 @@
                     android:textColor="@color/black"
                     android:textSize="30dp"
                     android:id="@+id/distance" />
+
                 <TextView
+                    android:id="@+id/calories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Calories brunt: "
+                    android:text="Calories burnt: "
                     android:textColor="@color/black"
-                    android:textSize="30dp"
-                    android:id="@+id/calories" />
+                    android:textSize="30dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

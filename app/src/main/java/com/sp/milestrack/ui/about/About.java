@@ -1,5 +1,8 @@
 package com.sp.milestrack.ui.about;
 
+import static android.graphics.Color.parseColor;
+
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -34,6 +37,11 @@ public class About extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentAboutBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        int currentNightMode = requireContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
+            binding.textView6.setTextColor(parseColor("#FFFFFF"));
+        }
         return root;
     }
     @Override

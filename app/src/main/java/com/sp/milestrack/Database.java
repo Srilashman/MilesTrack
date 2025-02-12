@@ -17,7 +17,7 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Will be called once when the database is not created
-        db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, height REAL, weight REAL, age REAL, weightlossgoal TEXT);");
+        db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, height REAL, weight REAL, age REAL, weightlossgoal REAL);");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Write a record into userinfo_table
-    public long insert(String date, double height, double weight, double age, String weightlossgoal) {
+    public long insert(String date, double height, double weight, double age, double weightlossgoal) {
         ContentValues cv = new ContentValues();
         cv.put("date", date);  // Add date to ContentValues
         cv.put("height", height);
@@ -58,7 +58,7 @@ public class Database extends SQLiteOpenHelper {
         return userId;
     }
 
-    public void update(String id, String date, double height, double weight, double age, String weightlossgoal) {
+    public void update(String id, String date, double height, double weight, double age, double weightlossgoal) {
         ContentValues cv = new ContentValues();
         String[] args = {id};
         cv.put("date", date);  // Add date to ContentValues
@@ -79,6 +79,19 @@ public class Database extends SQLiteOpenHelper {
         return db.rawQuery("SELECT date, weight, height FROM userinfo_table", null);
     }
 
+    // Validate if Weight Loss Goal is either a number or 'nil'
+    public static boolean isValidWeightLossGoal(String input) {
+        return input.matches("\\d+(\\.\\d+)?") || input.equals("nil");
+    }
+
+    // Convert 'nil' to 0 or parse the numeric input
+    public static double parseWeightLossGoal(String input) {
+        if (input.equals("nil")) {
+            return 0.0;
+        }
+        return Double.parseDouble(input);
+    }
+
     public String getID(Cursor c) { return (c.getString(0)); }
     public String getDate(Cursor c) {return c.getString(1);}  // Assuming 'date' is the second column (_id is first)
 
@@ -93,7 +106,5 @@ public class Database extends SQLiteOpenHelper {
     public double getAge(Cursor c) {
         return (c.getDouble(4));
     }
-    public String getWeightLossGoal(Cursor c) {
-        return (c.getString(5));
-    }
+    public double getWeightLossGoal(Cursor c) {return (c.getDouble(5));}
 }

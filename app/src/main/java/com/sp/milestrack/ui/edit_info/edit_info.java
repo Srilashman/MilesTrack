@@ -1,6 +1,9 @@
 package com.sp.milestrack.ui.edit_info;
 
+import static android.graphics.Color.parseColor;
+
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -55,6 +58,14 @@ public class edit_info extends Fragment {
         else {
             Log.d(TAG, "Superman");
         }
+
+        int currentNightMode = requireContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
+            binding.textView10.setTextColor(parseColor("#FFFFFF"));
+            binding.textView11.setTextColor(parseColor("#FFFFFF"));
+            binding.textView12.setTextColor(parseColor("#FFFFFF"));
+            binding.textView13.setTextColor(parseColor("#FFFFFF"));
+        }
         return root;
     }
     private void load() {
@@ -93,19 +104,31 @@ public class edit_info extends Fragment {
                 Double EditHeight = Double.parseDouble(binding.editheight.getText().toString());
                 Double EditWeight = Double.parseDouble(binding.editweight.getText().toString());
                 Double EditAge = Double.parseDouble(binding.editage.getText().toString());
-                String EditWeightLossGoal = binding.editweightlossgoal.getText().toString();
-                double WeightLossGoalValue = Double.parseDouble(EditWeightLossGoal);
-                if (WeightLossGoalValue >= EditWeight) {
-                    Toast.makeText(getContext(), "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
-                    return; // Exit the method, preventing database insertion and navigation
+                String EditWeightLossGoal = binding.editweightlossgoal.getText().toString().toLowerCase();
+
+                // Validate Weight Loss Goal input
+                if (!helper.isValidWeightLossGoal(EditWeightLossGoal)) {
+                    Toast.makeText(getContext(), "Please enter a number or 'nil' for the Weight Loss Goal", Toast.LENGTH_SHORT).show();
+                    c.close();
+                    return;
                 }
+
+                double WeightLossGoalValue = helper.parseWeightLossGoal(EditWeightLossGoal);
+
+                // Business logic: Check if weight loss goal is valid
+                if (WeightLossGoalValue >= EditWeight && WeightLossGoalValue != 0) {
+                    Toast.makeText(getContext(), "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
+                    c.close();
+                    return;
+                }
+
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String currentDate = sdf.format(new Date());
 
 
                 String user_id = helper.getID(c);
                 if (user_id != null) {
-                    helper.update(user_id, currentDate, EditHeight, EditWeight, EditAge, EditWeightLossGoal);
+                    helper.insert(currentDate, EditHeight, EditWeight, EditAge, WeightLossGoalValue);
                     Log.d(TAG, "User_id not null" + user_id);
                 } else {
                     Log.d(TAG, EditWeightLossGoal);
