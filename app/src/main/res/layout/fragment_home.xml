@@ -29,17 +29,16 @@
             android:orientation="vertical">-->
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="20dp">
+            android:paddingBottom="20dp"
+            android:id="@+id/baseLinearLayout">
 
             <!-- Weight Loss and Distance Boxes -->
             <LinearLayout
@@ -213,6 +212,71 @@
                     android:textSize="18sp"
                     android:padding="10dp" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/workout_linearlayout">
+
+                <!--<RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+
+                    <ImageView
+                        android:id="@+id/bg_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/green_rectangle"
+                        app:tint="#FF0000"
+                        android:scaleType="fitXY"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Wednesday (13 Mar)"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"/>
+
+
+                    <TextView
+                        android:id="@+id/tv_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_date"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Moderate pace: 3km run"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"/>
+
+
+                    <ImageView
+                        android:id="@+id/iv_edit"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/edit_btn"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"/>
+                </RelativeLayout>-->
+
+            </LinearLayout>
+
+
 
         </LinearLayout>
     </ScrollView>

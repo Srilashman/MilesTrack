@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_nav_home_to_nav_edit_info"
             app:destination="@id/nav_edit_info" />
+        <action
+            android:id="@+id/action_edit_workout"
+            app:destination="@id/nav_editWorkout" />
     </fragment>
 
     <fragment
@@ -68,5 +71,16 @@
         <action
             android:id="@+id/action_indoor_to_outdoor"
             app:destination="@id/nav_record" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_editWorkout"
+        android:name="com.sp.milestrack.ui.edit_info.editWorkout"
+        android:label="@string/menu_indoor"
+        tools:layout="@layout/fragment_edit_workout"
+        app:popUpToSaveState="true"
+        >
+        <action
+            android:id="@+id/action_finish_edit"
+            app:destination="@id/nav_home" />
     </fragment>
 </navigation>
