@@ -4,15 +4,18 @@ import static android.graphics.Color.parseColor;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,17 +31,26 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.android.material.snackbar.Snackbar;
 import com.sp.milestrack.Database;
 import com.sp.milestrack.LineChartViewModel;
 import com.sp.milestrack.R;
 import com.sp.milestrack.databinding.FragmentHomeBinding;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import android.database.Cursor;
 import com.sp.milestrack.Database;
 import com.github.mikephil.charting.formatter.ValueFormatter;
@@ -58,6 +70,7 @@ public class HomeFragment extends Fragment {
     private TextView selectedDates;
     private TextView calPrompt;
     private Database helper = null;
+    private LinearLayout workoutLayout;
     private static final String TAG = "MileTrack";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,7 +80,6 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         //final TextView textView = binding.textHome;
         //homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         // Initialize the LineChart
@@ -86,21 +98,60 @@ public class HomeFragment extends Fragment {
         cal_layout = root.findViewById(R.id.cal_layout);
         calPrompt = root.findViewById(R.id.cal_prompt);
         selectedDates = root.findViewById(R.id.selected_dates);
+        workoutLayout = root.findViewById(R.id.workout_linearlayout);
         cal_layout.setVisibility(View.GONE);
         cal_ic.setOnClickListener(toggleCal);
         cal.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             String selectedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH); // Match the format
+
             if (!isStartDateSelected) {
+                if (LocalDate.parse(selectedDate, formatter).isBefore(LocalDate.now())) {
+                    Toast.makeText(getContext(), "Start date has to be today or after", Toast.LENGTH_SHORT).show();
+                    cal.setDate(today.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()); // Reset to today
+                    return;
+                }
                 startDate = selectedDate;
                 isStartDateSelected = true;
-                selectedDates.setText("Start Date: " + startDate);
-                calPrompt.setText("Start Date: " + startDate + ", Enter your end date");
+                selectedDates.setVisibility(View.VISIBLE);
+                //selectedDates.setText("Start Date: " + startDate);
+                calPrompt.setText("Enter your end date" + ", Start Date: " + startDate);
             } else {
                 endDate = selectedDate;
-                calPrompt.setText("Start Date: " + startDate + ", End Date: " + endDate);
-                selectedDates.setText("");
-                isStartDateSelected = false; // Reset for next selection
-                //calPrompt.setVisibility(View.GONE);
+                LocalDate sDate = LocalDate.parse(startDate, formatter);
+                LocalDate eDate = LocalDate.parse(endDate, formatter);
+
+                if (eDate.isBefore(sDate)) {
+                    Toast.makeText(getContext(), "End date has to be after start date", Toast.LENGTH_SHORT).show();
+                    cal.setDate(today.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()); // Reset to today
+                    return;
+                }
+
+                if (helper.isPlansSet()) helper.deleteTraining();
+
+                calPrompt.setText("Start Date: " + startDate + "\nEnd Date: " + endDate);
+                selectedDates.setVisibility(View.GONE);
+                isStartDateSelected = false;
+                Cursor cursor = helper.getAll();
+                if (cursor != null && cursor.moveToLast()) {
+                    double weight = cursor.getColumnIndex("weight");
+                    double weightlossgoal = cursor.getColumnIndex("weightlossgoal");
+                    double height = cursor.getColumnIndex("height");
+                    int age = cursor.getColumnIndex("age");
+                    workoutLayout.removeAllViews();
+                    workoutLayout.invalidate();
+                    boolean b = generateWorkoutPlans(LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), weight, height, age, weightlossgoal);
+                    if (!b) {
+                        Toast.makeText(getContext(), "Daily calorie deficit too high", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+//                if (helper.isPlansSet()) {
+//                    Toast.makeText(getContext(), "Plans set", Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(getContext(), "No plans set", Toast.LENGTH_LONG).show();
+//                }
             }
         });
 
@@ -110,6 +161,35 @@ public class HomeFragment extends Fragment {
         loadMonthlyAverageBMI();
 
         binding.addinfobtn.setOnClickListener(addinfo);
+        if (helper.isPlansSet()) {
+            LocalDate ite_date;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH);
+            int i = 0;
+            Cursor cursor = helper.getAllTrainingPlans();
+            if (cursor != null) {
+                while (cursor.moveToNext()) { // Moves to the next row
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                    String exercise = cursor.getString(cursor.getColumnIndexOrThrow("exercise"));
+                    double distance = cursor.getDouble(cursor.getColumnIndexOrThrow("distance"));
+                    String intensity = cursor.getString(cursor.getColumnIndexOrThrow("intensity"));
+                    int status = cursor.getInt(cursor.getColumnIndexOrThrow("status")); // BIT type stored as INT
+                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                    ite_date = LocalDate.parse(date, formatter);
+
+                    if (i == 2) { // Every 3rd workout, insert a break day
+                        i = 0;
+                        ite_date = ite_date.minusDays(1); // Move to the next day for the break
+                        addWorkoutView(ite_date.format(formatter), "Break Day - Recovery", 0);
+                    }
+                    i++;
+                    addWorkoutView(date, intensity + " " + exercise + ": " + (int) distance + " km", status);
+                }
+                cursor.close(); // Close cursor to prevent memory leaks
+            }
+        }
+
+
+
 
         return root;
     }
@@ -326,4 +406,189 @@ public class HomeFragment extends Fragment {
         }
         return -1;  // Return -1 if parsing fails
     }
+    private void addWorkoutView(String date, String description) {
+        addWorkoutView(date, description,0);
+    }
+
+
+    private void addWorkoutView(String date, String description, int status) {
+        // Create the parent RelativeLayout
+        RelativeLayout relativeLayout = new RelativeLayout(workoutLayout.getContext());
+        RelativeLayout.LayoutParams relLayoutParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        relativeLayout.setLayoutParams(relLayoutParams);
+        relativeLayout.setPadding(Math.round(dpToPx(8)), Math.round(dpToPx(8)), Math.round(dpToPx(8)), Math.round(dpToPx(8)));
+
+        // Background ImageView
+        ImageView bgImage = new ImageView(workoutLayout.getContext());
+        bgImage.setId(View.generateViewId());
+        RelativeLayout.LayoutParams bgParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        bgImage.setImageResource(R.drawable.green_rectangle);
+        bgImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        bgImage.setLayoutParams(bgParams);
+        relativeLayout.addView(bgImage);
+        if (status == 0) {
+            if (description.equals("Break Day - Recovery")) {
+                bgImage.setColorFilter(Color.argb(50, 150, 150, 150), PorterDuff.Mode.MULTIPLY);
+            } else {
+                bgImage.setColorFilter(Color.argb(100, 255, 0, 0), PorterDuff.Mode.MULTIPLY);
+            }
+        } else {
+            bgImage.setColorFilter(Color.argb(255, 0, 255, 0));
+        }
+
+        // Date TextView
+        TextView tvDate = new TextView(workoutLayout.getContext());
+        tvDate.setId(View.generateViewId());
+        tvDate.setText(date);
+        tvDate.setTextSize(18);
+        tvDate.setTextColor(Color.BLACK);
+        tvDate.setTypeface(null, android.graphics.Typeface.BOLD);
+
+        RelativeLayout.LayoutParams dateParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        dateParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        dateParams.setMargins(Math.round(dpToPx(16)), Math.round(dpToPx(16)), 0, 0);
+        tvDate.setLayoutParams(dateParams);
+        relativeLayout.addView(tvDate);
+
+        // Description TextView
+        TextView tvDescription = new TextView(workoutLayout.getContext());
+        tvDescription.setId(View.generateViewId());
+        tvDescription.setText(description);
+        tvDescription.setTextSize(14);
+        tvDescription.setTextColor(Color.BLACK);
+
+        RelativeLayout.LayoutParams descParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        descParams.addRule(RelativeLayout.BELOW, tvDate.getId());
+        descParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        descParams.setMargins(Math.round(dpToPx(16)), Math.round(dpToPx(4)), 0, 0);
+        tvDescription.setLayoutParams(descParams);
+        relativeLayout.addView(tvDescription);
+
+        // Edit Button (40dp x 40dp)
+        ImageView ivEdit = new ImageView(workoutLayout.getContext());
+        ivEdit.setId(View.generateViewId());
+        ivEdit.setImageResource(R.drawable.edit_btn);
+        RelativeLayout.LayoutParams editParams = new RelativeLayout.LayoutParams(Math.round(dpToPx(40)), Math.round(dpToPx(40)));
+        editParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+        editParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        editParams.setMargins(0, 0, Math.round(dpToPx(16)), 0);
+        ivEdit.setLayoutParams(editParams);
+        relativeLayout.addView(ivEdit);
+        // Set OnClickListener for the Edit Button
+        ivEdit.setOnClickListener(v -> {
+            if (description.equals("Break Day - Recovery")) {
+                //Snackbar.make(getView(), "We recommend you taking a break.\nHowever may continue to execrise by going to record tab", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Toast.makeText(getContext(), "We recommend you taking a break.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "However may continue to execrise by going to record tab.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Bundle bundle = new Bundle();
+            bundle.putString("date", date);
+            String exercise = helper.getSportFromDate(date);
+            double dist = helper.getDistFromDate(date);
+            int status_2 = helper.getStatusFromDate(date);
+            bundle.putDouble("dist", dist);
+            bundle.putString("sport", exercise);
+            bundle.putString("status", String.valueOf(status_2));
+            // Action when clicking edit button
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_edit_workout, bundle);
+        });
+
+        // Add the created RelativeLayout to the LinearLayout
+        workoutLayout.addView(relativeLayout);
+    }
+
+    private boolean generateWorkoutPlans(LocalDate startDate, LocalDate endDate, double weight, double height, int age, double weightLossGoal) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        long days = ChronoUnit.DAYS.between(startDate, endDate);
+        double bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+
+        double totalCaloriesToBurn = weightLossGoal * 7700;
+        double dailyCalorieDeficit = totalCaloriesToBurn / days;
+
+        double runningDistance = Math.round((dailyCalorieDeficit / 60) / 2) * 2;
+        double cyclingDistance = Math.round((dailyCalorieDeficit / 30) / 2) * 2;
+        double hikingDistance = Math.round((dailyCalorieDeficit / 50) / 2) * 2;
+        double swimmingDistance = Math.round((dailyCalorieDeficit / 100) / 2) * 2;
+        if (runningDistance == 0) runningDistance = 1;
+        if (cyclingDistance == 0) cyclingDistance = 1;
+        if (hikingDistance == 0) hikingDistance = 1;
+        if (swimmingDistance == 0) swimmingDistance = 1;
+
+        if (dailyCalorieDeficit > 1000) {
+            return false;
+        }
+        helper.insertTrainingDate(startDate.format(formatter), endDate.format(formatter));
+
+        String[] activities = {"Running", "Cycling", "Hiking", "Swimming"};
+        double[] distances = {runningDistance, cyclingDistance, hikingDistance, swimmingDistance};
+
+        int mildDays = (int) (days * 0.3);       // First 30% of days: Mild workouts
+        int moderateDays = (int) (days * 0.4);   // Middle 40%: Moderate & Mild
+        int highDays = (int) (days - mildDays - moderateDays); // Last 30%: High & Mild
+
+        int i = 0;
+
+        for (int d = 0; d < days; d++) {
+            if (d % 3 == 2) {  // Every 3rd day (e.g., 2, 5, 8...) is a Break Day
+                addWorkoutView(startDate.format(formatter), "Break Day - Recovery");
+            } else {
+                String intensity = "";
+                String activity = "";
+                double distance = 0;
+
+                if (d < mildDays) {  // First 30% of days - Mild
+                    intensity = "Mild";
+                    activity = activities[i];
+                    distance = distances[i];
+                    addWorkoutView(startDate.format(formatter), intensity + " " + activity + ": " + (int) distance + " km");
+                } else if (d < mildDays + moderateDays) {  // Middle 40% - Moderate & Mild
+                    intensity = "Moderate";
+                    activity = activities[i];
+                    distance = distances[i];
+                    addWorkoutView(startDate.format(formatter), intensity + " " + activity + ": " + (int) distance + " km");
+
+                    i = (i + 1) % 4;
+                    intensity = "Mild";
+                    activity = activities[i];
+                    distance = distances[i];
+                    addWorkoutView(startDate.format(formatter), intensity + " " + activity + ": " + (int) distance + " km");
+                } else {  // Last 30% - High & Mild
+                    intensity = "High";
+                    activity = activities[i];
+                    distance = distances[i];
+                    addWorkoutView(startDate.format(formatter), intensity + " " + activity + ": " + (int) distance + " km");
+
+                    i = (i + 1) % 4;
+                    intensity = "Mild";
+                    activity = activities[i];
+                    distance = distances[i];
+                    addWorkoutView(startDate.format(formatter), intensity + " " + activity + ": " + (int) distance + " km");
+                }
+
+                // Insert the training plan into the database
+                helper.insertTrainingPlans(activity, distance, intensity, startDate.format(formatter),false);
+
+                i = (i + 1) % 4;
+            }
+            startDate = startDate.plusDays(1);
+        }
+
+        return true;
+    }
+
+
 }
