@@ -197,7 +197,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Write a record into userinfo_table
-    public long insert(String date, double height, double weight, double age, double weightlossgoal) {
+    public long insert(String date, double height, double weight, int age, String weightlossgoal) {
         ContentValues cv = new ContentValues();
         cv.put("date", date);  // Add date to ContentValues
         cv.put("height", height);
@@ -224,7 +224,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
-    public void update(String id, String date, double height, double weight, double age, double weightlossgoal) {
+    public void update(String id, String date, double height, double weight, int age, String weightlossgoal) {
         ContentValues cv = new ContentValues();
         String[] args = {id};
         cv.put("date", date);  // Add date to ContentValues
@@ -251,11 +251,11 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Convert 'nil' to 0 or parse the numeric input
-    public static double parseWeightLossGoal(String input) {
+    public static String parseWeightLossGoal(String input) {
         if (input.equals("nil")) {
-            return 0.0;
+            return "0.0";
         }
-        return Double.parseDouble(input);
+        return input;
     }
 
     public void deleteRecord(long id) {
@@ -276,8 +276,8 @@ public class Database extends SQLiteOpenHelper {
         return (c.getDouble(3));
     }
 
-    public double getAge(Cursor c) {
-        return (c.getDouble(4));
+    public int getAge(Cursor c) {
+        return (c.getInt(4));
     }
-    public double getWeightLossGoal(Cursor c) {return (c.getDouble(5));}
+    public String getWeightLossGoal(Cursor c) {return (c.getString(5));}
 }

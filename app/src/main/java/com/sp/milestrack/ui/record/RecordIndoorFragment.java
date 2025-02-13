@@ -19,31 +19,38 @@ import android.widget.Toast;
 import com.sp.milestrack.Database;
 import com.sp.milestrack.R;
 import com.sp.milestrack.databinding.FragmentRecordBinding;
+import com.sp.milestrack.databinding.FragmentRecordIndoorBinding;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class RecordIndoorFragment extends Fragment {
-    private FragmentRecordBinding binding;
+    private FragmentRecordIndoorBinding binding;
     private Button indoor_btn;
     private Button outdoor_btn;
     private Database helper = null;
     private static final String TAG = "MileTrack";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentRecordBinding.inflate(inflater, container, false);
+        binding = FragmentRecordIndoorBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 //        return inflater.inflate(R.layout.fragment_record_indoor, container, false);
 
         helper = new Database(requireContext());
-//        // Set click listener for outdoor button
-//        binding.outdoorbtn.setOnClickListener(record_map);
-//
-//        // Display a sample Toast (you can remove this later)
-//        Toast.makeText(getContext(), "Hello", Toast.LENGTH_LONG).show();
-//    }
-        return root;
+
+        // Set the Save button's OnClickListener using binding
+        binding.saveInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveRecord();
+            }
+        });
+
+        return binding.getRoot();
     }
     private View.OnClickListener record_map = new View.OnClickListener() {
         @Override
@@ -59,12 +66,95 @@ public class RecordIndoorFragment extends Fragment {
         outdoor_btn = view.findViewById(R.id.outdoorbtn);
         indoor_btn.setEnabled(false);
         outdoor_btn.setOnClickListener(record_map);
-        Toast.makeText(getContext(), "HEllo", Toast.LENGTH_LONG);
-
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void saveRecord() {
+        // Get the values from the EditText fields using binding
+        String date = binding.dateInput.getText().toString();
+        String time = binding.timeInput.getText().toString();
+        String sport = binding.sportsInput.getText().toString();
+        String distance = binding.distanceInput.getText().toString();
+        String duration = binding.durationInput.getText().toString();
+        String calories = binding.caloriesInput.getText().toString();
+
+        // Validate inputs (you can enhance this with more validations)
+        if (date.isEmpty() || time.isEmpty() || sport.isEmpty() || distance.isEmpty() || duration.isEmpty() || calories.isEmpty()) {
+            // Show an error message (You can show a Toast or an AlertDialog here)
+            Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate the time format
+        if (!isValidTimeFormat(time)) {
+            Toast.makeText(getContext(), "Invalid time format. Please use HH:mm", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Format the date and time together
+        String formattedDateTime = formatDateTime(date, time);
+
+        // Insert data into the database (assuming you have a method to insert a record in your Database helper)
+        long isInserted = helper.insertrecord(formattedDateTime, Double.parseDouble(distance), duration, Double.parseDouble(calories), sport);
+
+        // Show a message based on whether the insert was successful
+//        if (isInserted != -1) {
+//            Toast.makeText(getContext(), "Record saved successfully", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(getContext(), "Failed to save record", Toast.LENGTH_SHORT).show();
+//        }
+
+        NavController navController = Navigation.findNavController(requireView());
+        navController.navigate(R.id.nav_list);
+    }
+
+    private String formatDateTime(String date, String time) {
+        try {
+            // Combine the date and time into one string
+            String dateTimeString = date + " " + time;
+
+            // Define the format of the input date and time (adjust based on your input format)
+            SimpleDateFormat inputFormat = new SimpleDateFormat("d/M/yyyy h:mm"); // Input format: 3/2/2025 2:35
+            Date parsedDate = inputFormat.parse(dateTimeString); // Parse the combined string to Date
+
+            // Define the desired output format
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy  h:mm a"); // Output format: 03 Feb 2025 2:35 PM
+
+            // Return the formatted date-time string
+            return outputFormat.format(parsedDate);
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+            return null; // Return null in case of error
+        }
+    }
+
+    private boolean isValidTimeFormat(String time) {
+        // Define the 24-hour time format
+        SimpleDateFormat timeFormat24Hour = new SimpleDateFormat("HH:mm");
+        timeFormat24Hour.setLenient(false);  // Set lenient to false to prevent invalid times like "25:00"
+
+        try {
+            // Try parsing the time with the 24-hour format
+            timeFormat24Hour.parse(time);
+
+            // Check if hours and minutes are within valid ranges (00-23 for hours, 00-59 for minutes)
+            String[] timeParts = time.split(":");
+            int hours = Integer.parseInt(timeParts[0]);
+            int minutes = Integer.parseInt(timeParts[1]);
+
+            if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
+                return true;
+            } else {
+                return false; // Invalid time if hours or minutes are out of range
+            }
+        } catch (ParseException e) {
+            // If parsing fails, it's an invalid time format
+            return false;
+        }
     }
 }

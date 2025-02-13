@@ -159,6 +159,7 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
         stop_record_btn.setOnClickListener(stop);
         helper = new Database(requireContext());
 
+
         Bundle args = getArguments();
         if (args != null) {
             String sportChoice = getArguments().getString("sportChoice");
@@ -251,7 +252,6 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (isTracking) {
-
                     double totalDistance = intent.getDoubleExtra("total_distance", 0.0) /1000; // convert to km
                     routePoints = intent.getParcelableArrayListExtra("route_points");
 

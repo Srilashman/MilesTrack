@@ -40,7 +40,7 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:id="@+id/editTextText"
+                        android:id="@+id/timeInput"
                         android:layout_width="181dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="false"
@@ -60,7 +60,7 @@
                         app:srcCompat="@drawable/calendar" />
 
                     <EditText
-                        android:id="@+id/date_input"
+                        android:id="@+id/dateInput"
                         android:layout_width="181dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -85,7 +85,7 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:id="@+id/editTextText2"
+                        android:id="@+id/sportsInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="false"
@@ -121,7 +121,7 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:id="@+id/editTextText4"
+                        android:id="@+id/distanceInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="false"
@@ -157,7 +157,7 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:id="@+id/editTextText5"
+                        android:id="@+id/durationInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="false"
@@ -189,7 +189,7 @@
                     android:textSize="22sp" />
 
                 <EditText
-                    android:id="@+id/editTextText6"
+                    android:id="@+id/caloriesInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="false"
@@ -200,7 +200,7 @@
                     android:minHeight="48dp" />
 
                 <Button
-                    android:id="@+id/save_info_button"
+                    android:id="@+id/saveInfoButton"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

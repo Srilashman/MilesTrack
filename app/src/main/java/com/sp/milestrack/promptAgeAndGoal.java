@@ -59,7 +59,7 @@ public class promptAgeAndGoal extends AppCompatActivity {
     private View.OnClickListener submit = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Double Age = Double.parseDouble(age.getText().toString());
+            Integer Age = Integer.parseInt(age.getText().toString());
             String WeightLossGoal = weightLossGoal.getText().toString().toLowerCase();
 
             // Validate Weight Loss Goal input
@@ -69,10 +69,11 @@ public class promptAgeAndGoal extends AppCompatActivity {
                 return;
             }
 
-            double WeightLossGoalValue = helper.parseWeightLossGoal(WeightLossGoal);
+            String WeightLossGoalValue = helper.parseWeightLossGoal(WeightLossGoal);
+            Double weightLossGoalDouble = Double.parseDouble(WeightLossGoalValue);
 
             // Business logic: Check if weight loss goal is valid
-            if (WeightLossGoalValue >= weight && WeightLossGoalValue != 0) {
+            if (weightLossGoalDouble >= weight && WeightLossGoalValue != "0") {
                 Toast.makeText(promptAgeAndGoal.this, "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
                 helper.close();
                 return;

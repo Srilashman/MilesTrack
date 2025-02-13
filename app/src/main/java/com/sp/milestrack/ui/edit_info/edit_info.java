@@ -74,7 +74,7 @@ public class edit_info extends Fragment {
             binding.editheight.setText(String.valueOf(helper.getHeight(c)));
             binding.editweight.setText(String.valueOf(helper.getWeight(c)));
             binding.editage.setText(String.valueOf(helper.getAge(c)));
-            binding.editweightlossgoal.setText(String.valueOf(helper.getWeightLossGoal(c)));
+            binding.editweightlossgoal.setText(helper.getWeightLossGoal(c));
 
             String date = helper.getDate(c);  // Fetching the date
             Log.d(TAG,"Date: " + date);
@@ -103,7 +103,7 @@ public class edit_info extends Fragment {
 
                 Double EditHeight = Double.parseDouble(binding.editheight.getText().toString());
                 Double EditWeight = Double.parseDouble(binding.editweight.getText().toString());
-                Double EditAge = Double.parseDouble(binding.editage.getText().toString());
+                Integer EditAge = Integer.parseInt(binding.editage.getText().toString());
                 String EditWeightLossGoal = binding.editweightlossgoal.getText().toString().toLowerCase();
 
                 // Validate Weight Loss Goal input
@@ -113,14 +113,16 @@ public class edit_info extends Fragment {
                     return;
                 }
 
-                double WeightLossGoalValue = helper.parseWeightLossGoal(EditWeightLossGoal);
+                String WeightLossGoalValue = helper.parseWeightLossGoal(EditWeightLossGoal);
+                Double weightLossGoalDouble = Double.parseDouble(WeightLossGoalValue);
 
                 // Business logic: Check if weight loss goal is valid
-                if (WeightLossGoalValue >= EditWeight && WeightLossGoalValue != 0) {
+                if (weightLossGoalDouble >= EditWeight && WeightLossGoalValue != "0.0") {
                     Toast.makeText(getContext(), "Weight loss goal cannot be higher than or equal to your current weight!", Toast.LENGTH_LONG).show();
                     c.close();
                     return;
                 }
+
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String currentDate = sdf.format(new Date());

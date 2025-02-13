@@ -107,6 +107,7 @@ public class HomeFragment extends Fragment {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH); // Match the format
 
             if (!isStartDateSelected) {
+                Log.d(TAG, "start date selected");
                 if (LocalDate.parse(selectedDate, formatter).isBefore(LocalDate.now())) {
                     Toast.makeText(getContext(), "Start date has to be today or after", Toast.LENGTH_SHORT).show();
                     cal.setDate(today.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()); // Reset to today
@@ -118,6 +119,7 @@ public class HomeFragment extends Fragment {
                 //selectedDates.setText("Start Date: " + startDate);
                 calPrompt.setText("Enter your end date" + ", Start Date: " + startDate);
             } else {
+                Log.d(TAG, "end date selected");
                 endDate = selectedDate;
                 LocalDate sDate = LocalDate.parse(startDate, formatter);
                 LocalDate eDate = LocalDate.parse(endDate, formatter);
@@ -162,6 +164,7 @@ public class HomeFragment extends Fragment {
 
         binding.addinfobtn.setOnClickListener(addinfo);
         if (helper.isPlansSet()) {
+            Log.d(TAG, "plan set");
             LocalDate ite_date;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH);
             int i = 0;
@@ -235,7 +238,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-//    private void simulateData() {
+    //    private void simulateData() {
 //        // Simulate adding data to the chart
 //        List<Entry> entries = new ArrayList<>();
 //        entries.add(new Entry(0, 5));  // Jan
@@ -383,7 +386,7 @@ public class HomeFragment extends Fragment {
         }
 
         int currentNightMode = getResources().getConfiguration().uiMode
-        & Configuration.UI_MODE_NIGHT_MASK;
+                & Configuration.UI_MODE_NIGHT_MASK;
         if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
             lineChart.getAxisLeft().setTextColor(parseColor("#FFFFFF")); // left y-axis
             lineChart.getXAxis().setTextColor(parseColor("#FFFFFF"));
@@ -407,6 +410,7 @@ public class HomeFragment extends Fragment {
         return -1;  // Return -1 if parsing fails
     }
     private void addWorkoutView(String date, String description) {
+        Log.d(TAG, "Adding workout view for " + startDate + " - " + description);
         addWorkoutView(date, description,0);
     }
 
@@ -512,6 +516,12 @@ public class HomeFragment extends Fragment {
     }
 
     private boolean generateWorkoutPlans(LocalDate startDate, LocalDate endDate, double weight, double height, int age, double weightLossGoal) {
+
+        if (startDate == null || endDate == null) {
+            Log.e(TAG, "Error: One or both dates are null!");
+            return false;
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         long days = ChronoUnit.DAYS.between(startDate, endDate);
         double bmr = 10 * weight + 6.25 * height - 5 * age + 5;
@@ -580,7 +590,12 @@ public class HomeFragment extends Fragment {
                 }
 
                 // Insert the training plan into the database
-                helper.insertTrainingPlans(activity, distance, intensity, startDate.format(formatter),false);
+                long result = helper.insertTrainingPlans(activity, distance, intensity, startDate.format(formatter),false);
+                if (result == -1) {
+                    Log.e(TAG, "Failed to insert training plan for " + startDate);
+                } else {
+                    Log.d(TAG, "Successfully inserted training plan for " + startDate);
+                }
 
                 i = (i + 1) % 4;
             }

@@ -98,6 +98,11 @@ public class ListFragment extends Fragment {
             String activity = (activityIndex != -1) ? cursor.getString(activityIndex) : "N/A";
             final long id = (idIndex != -1) ? cursor.getLong(idIndex) : -1;  // Get the record ID
 
+            if (!distance.equals("N/A")) {
+                double dist = Double.parseDouble(distance);
+                distance = String.format("%.2f", dist);  // Format to 2 decimal places
+            }
+
             // Set the values to the TextViews
             dateTextView.setText(date);
             timeTextView.setText(duration + "min");
