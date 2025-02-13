@@ -37,9 +37,14 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.sp.milestrack.LocationTrackingService;
 import com.sp.milestrack.R;
-
-import java.util.ArrayList;
 import com.sp.milestrack.Database;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 
 
 public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
@@ -63,6 +68,7 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
     private long previousTime = 0;
     private double totalCaloriesBurned = 0.0;
     private String activityType = "Running"; // Default activity type
+    private static final String TAG = "MileTrack";
 
     //runs without a timer by reposting this handler at the end of the runnable
     Handler timerHandler = new Handler();
@@ -75,6 +81,8 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
                 int seconds = (int) (millis / 1000);
                 int minutes = seconds / 60;
                 seconds = seconds % 60;
+
+//                String time = String.format("%d:%02d", minutes, seconds);
 
                 timerTextView.setText("Time: " + String.format("%d:%02d", minutes, seconds));
 
@@ -117,7 +125,7 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
                         totalCaloriesBurned += caloriesBurned;
                     }
 
-                    caloriesTextView.setText(String.format("Calories: %.2f", totalCaloriesBurned));
+                    caloriesTextView.setText(String.format("Calories burned: %.2f", totalCaloriesBurned));
 
                     Log.d("Speed", String.format("Speed: %.2f km/h", speedKmph));
                     Log.d("MET", String.format("MET: %.2f", MET));
@@ -153,7 +161,18 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
 
         Bundle args = getArguments();
         if (args != null) {
+            String sportChoice = getArguments().getString("sportChoice");
             sport.setText("Activity: " + getArguments().getString("sportChoice"));
+
+            // Hide steps for Swimming or Cycling
+            if (sportChoice.equalsIgnoreCase("Swimming") || sportChoice.equalsIgnoreCase("Cycling")) {
+                stepsTextView.setVisibility(View.GONE);  // Hide the steps TextView
+            } else {
+                stepsTextView.setVisibility(View.VISIBLE);  // Show steps for other activities
+            }
+
+            // Set activityType for calorie calculation
+            activityType = sportChoice;
         }
 
         // Initialize Map
@@ -192,6 +211,19 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
     private View.OnClickListener stop = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            DateFormat df = new SimpleDateFormat("dd MMM yyyy  h:mm a");
+            String date = df.format(Calendar.getInstance().getTime());
+
+            // Print currentTime in the log
+            Log.d(TAG, "Current Time: " + date.toString());
+            String totalTime = timerTextView.getText().toString().replace("Time: ", "");
+
+            // Get total distance and calories
+            double totalDistance = Double.parseDouble(distanceTextView.getText().toString().replace("Distance: ", "").replace(" km", ""));
+            double totalCalories = totalCaloriesBurned;
+
+            helper.insertrecord(date, totalDistance, totalTime, totalCalories, activityType);
+
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(R.id.nav_list);
         }
@@ -229,7 +261,15 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
 
                     // Update UI
                     distanceTextView.setText(String.format("Distance: %.2f km", totalDistance));
-                    stepsTextView.setText(String.format("Steps: %.0f", stepsCount));
+                    caloriesTextView.setText(String.format("Calories burned: %.2f", totalCaloriesBurned));
+
+                    // Only update steps if the activity is not Swimming or Cycling
+                    if (!activityType.equalsIgnoreCase("Swimming") && !activityType.equalsIgnoreCase("Cycling")) {
+                        distanceInMeters = totalDistance * 1000;
+                        strideLength = 0.762; // meters per step
+                        stepsCount = distanceInMeters / strideLength;
+                        stepsTextView.setText(String.format("Steps: %.0f", stepsCount));
+                    }
 
                     // Update route on the map
                     if (routeLine != null) {
@@ -262,7 +302,6 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
                                 timerHandler.postDelayed(timerRunnable, 0);  // Start timer
                                 speedHandler.postDelayed(speedRunnable, 5000);  // Start speed calculation every 5 sec
                                 isStarted = true;
-
                             }
                         }
                     }
@@ -299,25 +338,6 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
         requireContext().stopService(serviceIntent);
     }
 
-    private void calculateStepsAndCalories(double totalDistance) {
-        // Convert distance from km to meters
-        double distanceInMeters = totalDistance * 1000;
-
-        // Estimate steps based on average stride length
-        double strideLength = 0.762; // meters per step (adjust if needed)
-        double stepsCount = distanceInMeters / strideLength;
-
-        // Assuming a weight of 70 kg and moderate walking (3.5 MET)
-        double weightInKg = 70;
-        double MET = 3.5;  // You can adjust MET depending on walking speed or activity type
-
-        // Calculate calories burned
-        double caloriesBurned = MET * weightInKg * totalDistance;
-
-        // Display or log results
-        Log.d("Activity", "Steps: " + (int)stepsCount);
-        Log.d("Activity", "Calories burned: " + caloriesBurned);
-    }
     private double getMET(String activity, double speedKmph) {
         switch (activity) {
             case "Running":

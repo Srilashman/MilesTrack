@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.sp.milestrack.Database;
 import com.sp.milestrack.R;
 import com.sp.milestrack.databinding.FragmentRecordBinding;
 
@@ -24,6 +25,8 @@ public class RecordIndoorFragment extends Fragment {
     private FragmentRecordBinding binding;
     private Button indoor_btn;
     private Button outdoor_btn;
+    private Database helper = null;
+    private static final String TAG = "MileTrack";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,7 +34,16 @@ public class RecordIndoorFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentRecordBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        return inflater.inflate(R.layout.fragment_record_indoor, container, false);
+//        return inflater.inflate(R.layout.fragment_record_indoor, container, false);
+
+        helper = new Database(requireContext());
+//        // Set click listener for outdoor button
+//        binding.outdoorbtn.setOnClickListener(record_map);
+//
+//        // Display a sample Toast (you can remove this later)
+//        Toast.makeText(getContext(), "Hello", Toast.LENGTH_LONG).show();
+//    }
+        return root;
     }
     private View.OnClickListener record_map = new View.OnClickListener() {
         @Override

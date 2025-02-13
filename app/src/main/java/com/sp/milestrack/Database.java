@@ -18,6 +18,7 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Will be called once when the database is not created
         db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, height REAL, weight REAL, age REAL, weightlossgoal REAL);");
+        db.execSQL("CREATE TABLE record_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, distance REAL, duration TEXT, calories REAL, activity TEXT);");
     }
 
     @Override
@@ -28,7 +29,7 @@ public class Database extends SQLiteOpenHelper {
 
     // Read all records from userinfo_table
     public Cursor getAll() {
-        return (getReadableDatabase().rawQuery("SELECT _id, date, height, weight, age, weightlossgoal FROM userinfo_table", null));
+        return (getReadableDatabase().rawQuery("SELECT * FROM record_table ORDER BY _id DESC", null));
     }
 
     public boolean ifPromptsDone() {
@@ -57,6 +58,20 @@ public class Database extends SQLiteOpenHelper {
         getWritableDatabase().close();
         return userId;
     }
+
+    public long insertrecord(String date, double distance, String duration, double calories, String activity) {
+        ContentValues cv = new ContentValues();
+        cv.put("date", date);  // Add date to ContentValues
+        cv.put("distance", distance);  // Add date to ContentValues
+        cv.put("duration", duration);
+        cv.put("calories", calories);
+        cv.put("activity", activity);
+        long userId = getWritableDatabase().insert("record_table", "null", cv);
+
+        getWritableDatabase().close();
+        return userId;
+    }
+
 
     public void update(String id, String date, double height, double weight, double age, double weightlossgoal) {
         ContentValues cv = new ContentValues();
@@ -91,6 +106,13 @@ public class Database extends SQLiteOpenHelper {
         }
         return Double.parseDouble(input);
     }
+
+    public void deleteRecord(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("record_table", "_id = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
 
     public String getID(Cursor c) { return (c.getString(0)); }
     public String getDate(Cursor c) {return c.getString(1);}  // Assuming 'date' is the second column (_id is first)

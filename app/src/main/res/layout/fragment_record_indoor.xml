@@ -46,8 +46,8 @@
                         android:layout_alignParentTop="false"
                         android:layout_alignParentEnd="true"
                         android:ems="10"
-                        android:hint="Enter Date"
-                        android:inputType="datetime|date"
+                        android:hint="Enter Time"
+                        android:inputType="datetime|time"
                         android:minHeight="48dp" />
 
                     <ImageView
@@ -60,13 +60,13 @@
                         app:srcCompat="@drawable/calendar" />
 
                     <EditText
-                        android:id="@+id/editTextTextPassword"
+                        android:id="@+id/date_input"
                         android:layout_width="181dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="Enter Time"
-                        android:inputType="datetime|time"
+                        android:hint="Enter Date"
+                        android:inputType="datetime|date"
                         android:minHeight="48dp" />
 
                 </RelativeLayout>
@@ -200,7 +200,7 @@
                     android:minHeight="48dp" />
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/save_info_button"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
