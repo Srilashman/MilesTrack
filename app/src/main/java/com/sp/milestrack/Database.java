@@ -21,7 +21,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, height REAL, weight REAL, age REAL, weightlossgoal TEXT);");
         db.execSQL("CREATE TABLE trainingschedule_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " start_date TEXT, end_date TEXT);");
         db.execSQL("CREATE TABLE trainingplans_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " exercise TEXT, distance DECIMAL(10, 2), intensity TEXT, status BIT, date TEXT);");
-        db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, height REAL, weight REAL, age REAL, weightlossgoal REAL);");
+//        db.execSQL("CREATE TABLE userinfo_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, height REAL, weight REAL, age REAL, weightlossgoal REAL);");
         db.execSQL("CREATE TABLE record_table (_id INTEGER PRIMARY KEY AUTOINCREMENT," + " date TEXT, distance REAL, duration TEXT, calories REAL, activity TEXT);");
     }
 
