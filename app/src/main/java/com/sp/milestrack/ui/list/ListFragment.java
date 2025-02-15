@@ -1,10 +1,14 @@
 package com.sp.milestrack.ui.list;
 
+import static android.graphics.Color.parseColor;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,6 +85,12 @@ public class ListFragment extends Fragment {
             ImageView routeImageView = view.findViewById(R.id.imageView10);  // Your ImageView for the route
             ImageView deleteImageView = view.findViewById(R.id.imageView8);  // This is the delete button
 
+            TextView distanceText = view.findViewById(R.id.textView26);  // Duration TextView
+            TextView caloriesText = view.findViewById(R.id.textView31);  // Distance TextView
+            TextView durationText = view.findViewById(R.id.textView28);  // Calories TextView
+            View dividerView = view.findViewById(R.id.view); // Divider view
+            View dividerView1 = view.findViewById(R.id.view1); // Another divider view
+
             // Retrieve values from the cursor
             // Safely get column indices
             int dateIndex = cursor.getColumnIndex("date");  // Adjust column name
@@ -102,6 +112,10 @@ public class ListFragment extends Fragment {
                 double dist = Double.parseDouble(distance);
                 distance = String.format("%.2f", dist);  // Format to 2 decimal places
             }
+            if (!calories.equals("N/A")) {
+                double cal = Double.parseDouble(calories);
+                calories = String.format("%.2f", cal);  // Format to 2 decimal places
+            }
 
             // Set the values to the TextViews
             dateTextView.setText(date);
@@ -117,6 +131,19 @@ public class ListFragment extends Fragment {
                 activity_icon.setImageResource(R.drawable.hiking_icon); }
             else if (activity.equals("Cycling")) {
                 activity_icon.setImageResource(R.drawable.cycling_icon); }
+
+            int currentNightMode = requireContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
+                dateTextView.setTextColor(parseColor("#FFFFFF"));
+                timeTextView.setTextColor(parseColor("#FFFFFF"));
+                distanceTextView.setTextColor(parseColor("#FFFFFF"));
+                caloriesTextView.setTextColor(parseColor("#FFFFFF"));
+                distanceText.setTextColor(parseColor("#FFFFFF"));
+                caloriesText.setTextColor(parseColor("#FFFFFF"));
+                durationText.setTextColor(parseColor("#FFFFFF"));
+                dividerView.setBackgroundColor(Color.WHITE);  // Change View color
+                dividerView1.setBackgroundColor(Color.WHITE);  // Change second View color
+            }
 
             // Set up the delete button click listener
             deleteImageView.setOnClickListener(new View.OnClickListener() {

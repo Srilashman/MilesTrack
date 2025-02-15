@@ -108,6 +108,7 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
                     double speedMps = distanceDelta / timeDelta;
                     double speedKmph = speedMps * 3.6;
                     double durationInHours = 5.0 / 3600.0; // Since we calculate every 5 seconds
+                    Log.d(TAG, "Speed = " + String.valueOf(speedKmph));
 
 
                     // Update MET based on activity and speed
@@ -159,6 +160,7 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
         stop_record_btn.setOnClickListener(stop);
         helper = new Database(requireContext());
 
+        stop_record_btn.setEnabled(false);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -252,6 +254,7 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (isTracking) {
+                    stop_record_btn.setEnabled(true);  // Enable the Stop button
                     double totalDistance = intent.getDoubleExtra("total_distance", 0.0) /1000; // convert to km
                     routePoints = intent.getParcelableArrayListExtra("route_points");
 
@@ -348,7 +351,7 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
                 else if (speedKmph <= 8) return 8.3;
                 else if (speedKmph <= 10) return 9.8;
                 else return 11.0;
-            case "Cycling":
+                case "Cycling":
                 if (speedKmph <= 16) return 4.0;
                 else if (speedKmph <= 19) return 6.8;
                 else return 8.0;

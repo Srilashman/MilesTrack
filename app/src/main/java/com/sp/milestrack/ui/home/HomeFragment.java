@@ -83,6 +83,7 @@ public class HomeFragment extends Fragment {
         //final TextView textView = binding.textHome;
         //homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         // Initialize the LineChart
+        helper = new Database(requireContext());
         lineChart = root.findViewById(R.id.chart);
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getDescription().setEnabled(false);
@@ -156,8 +157,6 @@ public class HomeFragment extends Fragment {
 //                }
             }
         });
-
-        helper = new Database(requireContext());
         // Simulate data update
         // Load actual BMI data instead of simulated data
         loadMonthlyAverageBMI();

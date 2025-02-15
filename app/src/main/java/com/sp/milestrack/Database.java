@@ -101,10 +101,32 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public boolean isPlansSet() {
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT _id, start_date, end_date FROM trainingschedule_table", null);
-        boolean hasData = (cursor != null && cursor.moveToFirst());
-        if (cursor != null) cursor.close();
+//        Cursor cursor = getReadableDatabase().rawQuery("SELECT _id, start_date, end_date FROM trainingschedule_table", null);
+//        boolean hasData = (cursor != null && cursor.moveToFirst());
+//        if (cursor != null) cursor.close();
+//        if (cursor != null && cursor.moveToFirst()) {
+//        return hasData;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+        boolean hasData = false;
+
+        try {
+            cursor = db.rawQuery("SELECT _id, start_date, end_date FROM trainingschedule_table", null);
+            hasData = (cursor != null && cursor.moveToFirst());
+
+            if (hasData) {
+                Log.d("DatabaseCheck", "Table trainingschedule_table exists and has data.");
+            } else {
+                Log.w("DatabaseCheck", "Table trainingschedule_table exists but is empty.");
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseCheck", "Error accessing trainingschedule_table. It may not exist: " + e.getMessage());
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+
         return hasData;
+
     }
 
 

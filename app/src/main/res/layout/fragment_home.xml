@@ -32,14 +32,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:paddingBottom="30dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/baseLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="20dp"
-            android:id="@+id/baseLinearLayout">
+            android:paddingBottom="20dp">
 
             <!-- Weight Loss and Distance Boxes -->
             <LinearLayout
@@ -139,13 +140,14 @@
                     android:text="Record BMI Daily!!"
                     android:textColor="#000000"
                     android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
 
                 <Button
                     android:id="@+id/addinfobtn"
                     android:layout_width="120dp"
                     android:layout_height="48dp"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="20dp"
                     android:backgroundTint="#76E72A"
                     android:text="Add"
                     app:cornerRadius="30dp" />
@@ -212,11 +214,12 @@
                     android:padding="10dp"
                     android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/workout_linearlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:id="@+id/workout_linearlayout">
+                android:orientation="vertical">
 
                 <!--<RelativeLayout
                     android:layout_width="match_parent"
@@ -275,7 +278,6 @@
                 </RelativeLayout>-->
 
             </LinearLayout>
-
 
 
         </LinearLayout>
