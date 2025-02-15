@@ -40,7 +40,7 @@ public class Database extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("start_date", start_date);  // Add date to ContentValues
         cv.put("end_date", end_date);
-        long userId = getWritableDatabase().insert("trainingschedule_table", "null", cv);
+        long userId = getWritableDatabase().insert("trainingschedule_table", null, cv);
 
         getWritableDatabase().close();
         return userId;

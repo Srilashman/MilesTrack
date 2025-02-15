@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
                 calPrompt.setText("Start Date: " + startDate + "\nEnd Date: " + endDate);
                 selectedDates.setVisibility(View.GONE);
                 isStartDateSelected = false;
-                Cursor cursor = helper.getAll();
+                Cursor cursor = helper.getLastRecord();
                 if (cursor != null && cursor.moveToLast()) {
                     double weight = cursor.getColumnIndex("weight");
                     double weightlossgoal = cursor.getColumnIndex("weightlossgoal");
@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment {
         if (helper.isPlansSet()) {
             Log.d(TAG, "plan set");
             LocalDate ite_date;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
             int i = 0;
             Cursor cursor = helper.getAllTrainingPlans();
             if (cursor != null) {
