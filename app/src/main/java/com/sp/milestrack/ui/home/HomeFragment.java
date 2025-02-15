@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -235,8 +236,6 @@ public class HomeFragment extends Fragment {
         if (bundle != null) {
             addDist = bundle.getDouble("add_dist", 0);
             minusDist = bundle.getDouble("minus_dist", 0);
-        } else {
-            Log.d("DEBUG", "Bundle is null");
         }
         totalD += addDist - minusDist;
         totalDistance.setText(String.format(Locale.getDefault(), "%.2f km", totalD));

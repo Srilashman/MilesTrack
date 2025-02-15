@@ -101,8 +101,6 @@ public class editWorkout extends Fragment {
                 bundle.putDouble("add_dist", dist);
                 changeCheckBox = true;
             }
-            Log.d("DEBUG", String.valueOf(checkAsComplete.isChecked()));
-            Log.d("DEBUG", String.valueOf(status));
             if (!checkAsComplete.isChecked() && status != 0) {
                 bundle.putDouble("minus_dist", dist);
                 changeCheckBox = true;
