@@ -72,6 +72,8 @@ public class HomeFragment extends Fragment {
     private Database helper = null;
     private LinearLayout workoutLayout;
     private static final String TAG = "MileTrack";
+    private TextView totalWeightLoss;
+    private TextView totalDistance;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -189,8 +191,47 @@ public class HomeFragment extends Fragment {
                 cursor.close(); // Close cursor to prevent memory leaks
             }
         }
+        totalWeightLoss = root.findViewById(R.id.totalweightloss);
+        Cursor c = helper.getAllBMIRecords();
+        double firstWeight = 0.0, lastWeight = 0.0;
+        double wDiff = 0.0;
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                firstWeight = c.getDouble(c.getColumnIndexOrThrow("weight"));
+            }
+            if (c.moveToLast()) {
+                lastWeight = c.getDouble(c.getColumnIndexOrThrow("weight"));
+            }
+            if (firstWeight > lastWeight) {
+                wDiff = firstWeight - lastWeight;
+            }
+            c.close();  // Ensure the cursor is closed
+        }
+        totalWeightLoss.setText(String.format(Locale.getDefault(), "%.2f kg", wDiff));
 
+        totalDistance = root.findViewById(R.id.totaldistance);
+        String s = totalDistance.getText().toString().trim();
+        double totalD = 0;
+        if (s.endsWith("km")) {
+            try {
+                totalD = Double.parseDouble(s.substring(0, s.length() - 2).trim());
+            } catch (NumberFormatException e) {
+                totalD = 0; // Default to 0 if parsing fails
+            }
+        }
 
+        c = helper.getAll();
+        while (c != null && c.moveToNext()) {
+            totalD += c.getDouble(c.getColumnIndexOrThrow("distance"));
+        }
+        Bundle bundle = getArguments();
+        double addDist = 0, minusDist = 0;
+        if (bundle != null) {
+            addDist = bundle.getDouble("add_dist", 0);
+            minusDist = bundle.getDouble("minus_dist", 0);
+        }
+        totalD += addDist - minusDist;
+        totalDistance.setText(String.format(Locale.getDefault(), "%.2f km", totalD));
 
 
         return root;

@@ -1,8 +1,10 @@
 package com.sp.milestrack.ui.edit_info;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -92,16 +94,28 @@ public class editWorkout extends Fragment {
         public void onClick(View view) {
             Spinner spinner = requireView().findViewById(R.id.sport_choice_editing);
             String text = (spinner.getSelectedItem() != null) ? spinner.getSelectedItem().toString() : sport;
+            boolean changeCheckBox = false;
+            Bundle bundle = new Bundle();
+            if (checkAsComplete.isChecked() && status == 0) {
+                bundle.putDouble("add_dist", dist);
+                changeCheckBox = true;
+            }
+            if (!checkAsComplete.isChecked() && status == 1) {
+                bundle.putDouble("minus_dist", dist);
+                changeCheckBox = true;
+            }
             if (text == sport && editDist.getText() == null && checkAsComplete.isChecked() == (status != 0)) {
                 return; // no change Double.parseDouble(String.valueOf(editDist.getText()))
             } else if (editDist.getText().toString().isEmpty()) {
                 helper.updateTrainingPlansByDate(date, (checkAsComplete.isChecked()), dist, text);
                 NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.action_finish_edit);
+                if (changeCheckBox) navController.navigate(R.id.action_finish_edit, bundle);
+                else navController.navigate(R.id.action_finish_edit);
             } else {
                 helper.updateTrainingPlansByDate(date, (checkAsComplete.isChecked()), Double.parseDouble(editDist.getText().toString()), text);
                 NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.action_finish_edit);
+                if (changeCheckBox) navController.navigate(R.id.action_finish_edit, bundle);
+                else navController.navigate(R.id.action_finish_edit);
             }
         }
     };
