@@ -8,6 +8,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class editWorkout extends Fragment {
             sport = bundle.getString("sport", "");
             date = bundle.getString("date", "");
             dist = bundle.getDouble("dist", -2);
-            status = bundle.getInt("status", status);
+            status = bundle.getInt("status", -1);
         }
 //        Toast.makeText(getContext(), sport, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
@@ -100,7 +101,9 @@ public class editWorkout extends Fragment {
                 bundle.putDouble("add_dist", dist);
                 changeCheckBox = true;
             }
-            if (!checkAsComplete.isChecked() && status == 1) {
+            Log.d("DEBUG", String.valueOf(checkAsComplete.isChecked()));
+            Log.d("DEBUG", String.valueOf(status));
+            if (!checkAsComplete.isChecked() && status != 0) {
                 bundle.putDouble("minus_dist", dist);
                 changeCheckBox = true;
             }

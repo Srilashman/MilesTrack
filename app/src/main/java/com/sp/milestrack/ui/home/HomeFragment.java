@@ -1,7 +1,10 @@
 package com.sp.milestrack.ui.home;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.graphics.Color.parseColor;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -210,6 +213,9 @@ public class HomeFragment extends Fragment {
         totalWeightLoss.setText(String.format(Locale.getDefault(), "%.2f kg", wDiff));
 
         totalDistance = root.findViewById(R.id.totaldistance);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String savedDistance = prefs.getString("totalDistance", "0.0km"); // Default to "0.0km" if missing
+        totalDistance.setText(savedDistance);
         String s = totalDistance.getText().toString().trim();
         double totalD = 0;
         if (s.endsWith("km")) {
@@ -229,6 +235,8 @@ public class HomeFragment extends Fragment {
         if (bundle != null) {
             addDist = bundle.getDouble("add_dist", 0);
             minusDist = bundle.getDouble("minus_dist", 0);
+        } else {
+            Log.d("DEBUG", "Bundle is null");
         }
         totalD += addDist - minusDist;
         totalDistance.setText(String.format(Locale.getDefault(), "%.2f km", totalD));
@@ -241,6 +249,26 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        double minusD = 0;
+        Cursor c = helper.getAll();
+        while (c != null && c.moveToNext()) {
+            minusD += c.getDouble(c.getColumnIndexOrThrow("distance"));
+        }
+        String s = totalDistance.getText().toString().trim();
+        double totalD = 0;
+        if (s.endsWith("km")) {
+            try {
+                totalD = Double.parseDouble(s.substring(0, s.length() - 2).trim());
+            } catch (NumberFormatException e) {
+                totalD = 0; // Default to 0 if parsing fails
+            }
+        }
+        totalDistance.setText(String.format(Locale.getDefault(), "%.2f km", totalD - minusD));
+        // Saving the value
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("totalDistance", totalDistance.getText().toString().trim());
+        editor.apply();
     }
     private void updateLineChart(List<Entry> entries) {
         if (entries != null && !entries.isEmpty()) {
@@ -545,7 +573,7 @@ public class HomeFragment extends Fragment {
             int status_2 = helper.getStatusFromDate(date);
             bundle.putDouble("dist", dist);
             bundle.putString("sport", exercise);
-            bundle.putString("status", String.valueOf(status_2));
+            bundle.putInt("status", status_2);
             // Action when clicking edit button
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_edit_workout, bundle);
