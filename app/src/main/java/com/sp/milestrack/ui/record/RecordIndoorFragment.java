@@ -92,7 +92,7 @@ public class RecordIndoorFragment extends Fragment {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 // Handle the date selection event
-                String selectedDate = dayOfMonth + "-" + (month + 1) + "-" + year;
+                String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                 //Toast.makeText(getContext(), "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
                 dateInput.setText(selectedDate);
                 calendar.setVisibility(View.GONE);

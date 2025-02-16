@@ -82,7 +82,6 @@ public class ListFragment extends Fragment {
             TextView distanceTextView = view.findViewById(R.id.textView27);  // Distance TextView
             TextView caloriesTextView = view.findViewById(R.id.textView30);  // Calories TextView
             ImageView activity_icon = view.findViewById(R.id.imageView5);
-            ImageView routeImageView = view.findViewById(R.id.imageView10);  // Your ImageView for the route
             ImageView deleteImageView = view.findViewById(R.id.imageView8);  // This is the delete button
 
             TextView distanceText = view.findViewById(R.id.textView26);  // Duration TextView
@@ -131,6 +130,9 @@ public class ListFragment extends Fragment {
                 activity_icon.setImageResource(R.drawable.hiking_icon); }
             else if (activity.equals("Cycling")) {
                 activity_icon.setImageResource(R.drawable.cycling_icon); }
+            else {
+                activity_icon.setImageResource(R.drawable.running_icon);
+            }
 
             int currentNightMode = requireContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
             if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) { // if user in dark mode, change text color to white
