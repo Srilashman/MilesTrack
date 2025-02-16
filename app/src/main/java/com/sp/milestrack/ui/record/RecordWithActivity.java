@@ -216,6 +216,30 @@ public class RecordWithActivity extends Fragment implements OnMapReadyCallback {
         public void onClick(View view) {
             DateFormat df = new SimpleDateFormat("dd MMM yyyy  h:mm a");
             String date = df.format(Calendar.getInstance().getTime());
+            /// Stop tracking
+            isTracking = false;
+
+            // Stop location updates (prevent redrawing)
+            Intent stopIntent = new Intent("STOP_TRACKING");
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(stopIntent);
+
+            // Remove existing route line
+            if (routeLine != null) {
+                routeLine.remove();
+                routeLine = null; // Nullify to prevent reuse
+            }
+
+            // Clear the stored route points
+            routePoints.clear();
+
+            // Clear the map
+            if (mMap != null) {
+                mMap.clear(); // Ensures no old routes remain
+            }
+
+            // Stop the LocationTrackingService
+            Intent serviceIntent = new Intent(requireContext(), LocationTrackingService.class);
+            requireContext().stopService(serviceIntent);
 
             // Print currentTime in the log
             Log.d(TAG, "Current Time: " + date.toString());
