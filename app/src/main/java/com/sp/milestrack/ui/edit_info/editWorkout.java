@@ -98,11 +98,13 @@ public class editWorkout extends Fragment {
             boolean changeCheckBox = false;
             Bundle bundle = new Bundle();
             if (checkAsComplete.isChecked() && status == 0) {
-                bundle.putDouble("add_dist", dist);
+                if (editDist.getText().toString().isEmpty()) bundle.putDouble("add_dist", dist);
+                else bundle.putDouble("add_dist", Double.parseDouble(String.valueOf(editDist.getText())));
                 changeCheckBox = true;
             }
             if (!checkAsComplete.isChecked() && status != 0) {
-                bundle.putDouble("minus_dist", dist);
+                if (editDist.getText().toString().isEmpty()) bundle.putDouble("minus_dist", dist);
+                else bundle.putDouble("minus_dist", Double.parseDouble(String.valueOf(editDist.getText())));
                 changeCheckBox = true;
             }
             if (text == sport && editDist.getText() == null && checkAsComplete.isChecked() == (status != 0)) {
