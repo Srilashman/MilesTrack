@@ -17,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sp.milestrack.Database;
@@ -35,6 +38,9 @@ public class RecordIndoorFragment extends Fragment {
     private Button outdoor_btn;
     private Database helper = null;
     private static final String TAG = "MileTrack";
+    private CalendarView calendar;
+    private ImageView cal;
+    private TextView dateInput;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +68,9 @@ public class RecordIndoorFragment extends Fragment {
             binding.textView14.setTextColor(parseColor("#FFFFFF"));
 
         }
+        calendar = root.findViewById(R.id.calendar);
+        cal = root.findViewById(R.id.cal_icon);
+        dateInput = root.findViewById(R.id.dateInput);
         return binding.getRoot();
     }
     private View.OnClickListener record_map = new View.OnClickListener() {
@@ -78,6 +87,18 @@ public class RecordIndoorFragment extends Fragment {
         outdoor_btn = view.findViewById(R.id.outdoorbtn);
         indoor_btn.setEnabled(false);
         outdoor_btn.setOnClickListener(record_map);
+        calendar.setVisibility(View.GONE);
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                // Handle the date selection event
+                String selectedDate = dayOfMonth + "-" + (month + 1) + "-" + year;
+                //Toast.makeText(getContext(), "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
+                dateInput.setText(selectedDate);
+                calendar.setVisibility(View.GONE);
+            }
+        });
+        cal.setOnClickListener(toggleCal);
     }
     @Override
     public void onDestroyView() {
@@ -169,4 +190,16 @@ public class RecordIndoorFragment extends Fragment {
             return false;
         }
     }
+    private View.OnClickListener toggleCal = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (calendar.getVisibility() == View.VISIBLE) {
+                calendar.animate().alpha(0.0f).setDuration(300).withEndAction(() -> calendar.setVisibility(View.GONE));
+            } else {
+                calendar.setVisibility(View.VISIBLE);
+                calendar.animate().alpha(1.0f).setDuration(300);
+            }
+
+        }
+    };
 }
